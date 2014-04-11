@@ -10,7 +10,14 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   it { routes_command("do ssh keys list").to(:ssh_keys_list) }
   it { routes_command("do ssh keys show 123").to(:ssh_keys_show) }
 
-  let(:client) { instance_double("::DigitalOcean::API") }
+  let(:client) do
+    instance_double(
+      "::DigitalOcean::API",
+      ssh_keys: client_ssh_keys
+    )
+  end
+
+  let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
 
   before do
     Lita.config.handlers.digitalocean.tap do |config|
@@ -61,7 +68,10 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
 
     describe "#ssh_keys_add" do
       it "responds with the details of the new key" do
-        allow(client).to receive_message_chain(:ssh_keys, :add).and_return(do_key)
+        allow(client_ssh_keys).to receive(:add).with(
+          name: "My Key",
+          ssh_pub_key: "ssh-rsa abcdefg"
+        ).and_return(do_key)
         send_command("do ssh keys add 'My Key' 'ssh-rsa abcdefg'")
         expect(replies.last).to eq("Created new SSH key: 123 (My Key): ssh-rsa abcdefg")
       end
@@ -74,21 +84,25 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
 
     describe "#ssh_keys_edit" do
       it "responds with the edited key's values" do
-        allow(client).to receive_message_chain(:ssh_keys, :edit).and_return(do_key)
-        send_command("do ssh keys edit 123 name='My Key' public_key='ssh-rsa abcdefg'")
+        allow(client_ssh_keys).to receive(:edit).with(
+          "123",
+          name: "My Key",
+          ssh_pub_key: "ssh-rsa abcdefg"
+        ).and_return(do_key)
+        send_command(%{do ssh keys edit 123 name='My Key' public_key="ssh-rsa abcdefg"})
         expect(replies.last).to eq("Updated SSH key: 123 (My Key): ssh-rsa abcdefg")
       end
     end
 
     describe "#ssh_keys_list" do
       it "returns a list of key IDs and names" do
-        allow(client).to receive_message_chain(:ssh_keys, :list).and_return(do_list)
+        allow(client_ssh_keys).to receive(:list).and_return(do_list)
         send_command("do ssh keys list")
         expect(replies).to eq(["123 (My Key)", "456 (Your Key)"])
       end
 
       it "returns an empty state message if there are no SSH keys" do
-        allow(client).to receive_message_chain(:ssh_keys, :list).and_return(do_list_empty)
+        allow(client_ssh_keys).to receive(:list).and_return(do_list_empty)
         send_command("do ssh keys list")
         expect(replies.last).to eq("No SSH keys have been added yet.")
       end
@@ -96,7 +110,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
 
     describe "#ssh_keys_show" do
       it "responds with the public key" do
-        allow(client).to receive_message_chain(:ssh_keys, :show).and_return(do_key)
+        allow(client_ssh_keys).to receive(:show).with("123").and_return(do_key)
         send_command("do ssh keys show 123")
         expect(replies.last).to eq("123 (My Key): ssh-rsa abcdefg")
       end

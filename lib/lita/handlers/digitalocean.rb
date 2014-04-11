@@ -52,6 +52,10 @@ module Lita
       def ssh_keys_edit(response)
         args = extract_named_args(response.args, :name, :public_key)
 
+        if args[:public_key]
+          args[:ssh_pub_key] = args.delete(:public_key)
+        end
+
         do_response = do_call(response) do |client|
           client.ssh_keys.edit(response.matches[0][0], args)
         end or return
@@ -119,9 +123,20 @@ module Lita
         do_response
       end
 
-      # TODO: This doesn't actually work!
       def extract_named_args(args, *keys)
-        args
+        args.inject({}) do |hash, arg|
+          key, value = arg.split("=", 2)
+
+          if value
+            normalized_key = key.downcase.to_sym
+
+            if keys.include?(normalized_key)
+              hash[normalized_key] = value.gsub(/\A["']|["']\Z/, "")
+            end
+          end
+
+          hash
+        end
       end
     end
 
