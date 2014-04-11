@@ -6,12 +6,17 @@ en:
           client_id and api_key must be set in Lita's configuration to
           use the DigitalOcean commands.
         error: "DigitalOcean API error: %{message}"
+        format: Format
         help:
           ssh_keys:
             list_key: do ssh keys list
             list_value: Lists all SSH keys.
             show_key: do ssh keys show ID
             show_value: Shows the public key for SSH key with the given ID.
+            add_key: do ssh keys add NAME PUBLIC_KEY
+            add_value: Adds a new SSH key.
         ssh_keys:
+          add:
+            created: "Created new SSH key: %{message}"
           list:
             empty: No SSH keys have been added yet.
