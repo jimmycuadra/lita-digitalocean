@@ -17,13 +17,20 @@ module Lita
         config.api_key = nil
       end
 
-      route /^(?:do|digital\s*ocean)/i, :dispatch, command: true
+      route /^(?:do|digital\s*ocean)/i, :dispatch, command: true, help: {
+        t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value"),
+        t("help.ssh_keys.show_key") => t("help.ssh_keys.show_value"),
+      }
 
       def dispatch(response)
         submodule_name, subcommand_name, *_args = response.args
         submodule_class = SUBMODULES[submodule_name.to_s.downcase.to_sym]
 
         if submodule_class
+          unless client_id && api_key
+            return response.reply(t("credentials_missing"))
+          end
+
           submodule = submodule_class.new(self, client)
 
           subcommand = subcommand_name.to_s.downcase.to_sym

@@ -2,7 +2,18 @@ en:
   lita:
     handlers:
       digitalocean:
+        credentials_missing: >-
+          client_id and api_key must be set in Lita's configuration to
+          use the DigitalOcean commands.
         error: "DigitalOcean API error: %{message}"
+        help:
+          ssh_keys:
+            list_key: do ssh_keys list
+            list_value: Lists all SSH keys.
+            show_key: do ssh_keys show ID
+            show_value: Shows the public key for SSH key with the given ID.
         ssh_keys:
           list:
             empty: No SSH keys have been added yet.
+          show:
+            id_required: You must provide the ID of the SSH key to show.

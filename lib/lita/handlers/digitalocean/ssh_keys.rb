@@ -28,9 +28,15 @@ module Lita
         end
 
         def show(response)
-          do_response = do_call { client.ssh_keys.show(response.args[2..-1]) }
-          key = do_response.ssh_key
-          response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
+          key_id = response.args[2..response.args.size][0]
+
+          if key_id
+            do_response = do_call { client.ssh_keys.show(key_id) }
+            key = do_response.ssh_key
+            response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
+          else
+            response.reply(t("ssh_keys.show.id_required"))
+          end
         end
       end
     end

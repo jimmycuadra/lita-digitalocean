@@ -57,12 +57,19 @@ describe Lita::Handlers::Digitalocean::SSHKeys do
     end
 
     before do
-      allow(response).to receive(:args).and_return(%w(do ssh_keys show 123))
       allow(client).to receive_message_chain(:ssh_keys, :show).and_return(do_response)
     end
 
     it "shows the details of the key" do
+      allow(response).to receive(:args).and_return(%w(ssh_keys show 123))
       expect(response).to receive(:reply).with("123 (My Key): ssh-rsa asdfjkl;")
+      subject.show(response)
+    end
+
+    it "replies with an error message if a key wasn't provided" do
+      allow(response).to receive(:args).and_return(%w(ssh_keys show))
+      allow(handler).to receive(:t).with("ssh_keys.show.id_required").and_return("MISSING ARG")
+      expect(response).to receive(:reply).with("MISSING ARG")
       subject.show(response)
     end
   end
