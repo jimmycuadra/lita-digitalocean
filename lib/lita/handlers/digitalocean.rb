@@ -1,58 +1,50 @@
-require "rash"
 require "digital_ocean"
-
-require_relative "digitalocean/ssh_keys"
 
 module Lita
   module Handlers
     class Digitalocean < Handler
-      class APIError < StandardError; end
-
-      SUBMODULES = {
-        ssh_keys: SSHKeys
-      }
-
       def self.default_config(config)
         config.client_id = nil
         config.api_key = nil
       end
 
-      route /^(?:do|digital\s*ocean)/i, :dispatch, command: true, help: {
-        t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value"),
+      private
+
+      def self.do_route(regexp, route_name, help)
+        route(regexp, route_name, command: true, restrict_to: :digitalocean_admins, help: help)
+      end
+
+      public
+
+      do_route /^do\s+ssh\s+keys?\s+list$/i, :ssh_keys_list, {
+        t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value")
+      }
+
+      do_route /^do\s+ssh\s+keys?\s+show\s+(\d+)$/i, :ssh_keys_show, {
         t("help.ssh_keys.show_key") => t("help.ssh_keys.show_value"),
       }
 
-      def dispatch(response)
-        submodule_name, subcommand_name, *_args = response.args
-        submodule_class = SUBMODULES[submodule_name.to_s.downcase.to_sym]
+      def ssh_keys_list(response)
+        do_response = do_call(response) do |client|
+          client.ssh_keys.list
+        end or return
 
-        if submodule_class
-          unless client_id && api_key
-            return response.reply(t("credentials_missing"))
-          end
-
-          submodule = submodule_class.new(self, client)
-
-          subcommand = subcommand_name.to_s.downcase.to_sym
-
-          if submodule.respond_to?(subcommand)
-            begin
-              submodule.public_send(subcommand, response)
-            rescue APIError => e
-              response.reply(t("error", message: e.message))
-            end
+        if do_response.ssh_keys.empty?
+          response.reply(t("ssh_keys.list.empty"))
+        else
+          do_response.ssh_keys.each do |key|
+            response.reply("#{key.id} (#{key.name})")
           end
         end
       end
 
-      def do_call
-        do_response = yield
+      def ssh_keys_show(response)
+        do_response = do_call(response) do |client|
+          client.ssh_keys.show(response.matches[0][0])
+        end or return
 
-        if do_response.status != "OK"
-          raise APIError.new(do_response.message)
-        end
-
-        do_response
+        key = do_response.ssh_key
+        response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
       end
 
       private
@@ -71,6 +63,22 @@ module Lita
 
       def config
         Lita.config.handlers.digitalocean
+      end
+
+      def do_call(response)
+        unless api_key && client_id
+          response.reply(t("credentials_missing"))
+          return
+        end
+
+        do_response = yield client
+
+        if do_response.status != "OK"
+          response.reply(t("error", message: do_response.message))
+          return
+        end
+
+        do_response
       end
     end
 
