@@ -2,3 +2,7 @@ en:
   lita:
     handlers:
       digitalocean:
+        error: There was an error communicating with DigitalOcean.
+        ssh_keys:
+          list:
+            empty: No SSH keys have been added yet.
