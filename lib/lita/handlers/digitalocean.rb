@@ -21,12 +21,12 @@ module Lita
 
       def dispatch(response)
         submodule_name, subcommand_name, *_args = response.args
-        submodule_class = SUBMODULES[submodule_name.downcase.to_sym]
+        submodule_class = SUBMODULES[submodule_name.to_s.downcase.to_sym]
 
         if submodule_class
           submodule = submodule_class.new(self, client)
 
-          subcommand = subcommand_name.downcase.to_sym
+          subcommand = subcommand_name.to_s.downcase.to_sym
 
           if submodule.respond_to?(subcommand)
             begin
