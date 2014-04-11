@@ -1,5 +1,9 @@
 # lita-digitalocean
 
+[![Build Status](https://travis-ci.org/jimmycuadra/lita-digitalocean.png?branch=master)](https://travis-ci.org/jimmycuadra/lita-digitalocean)
+[![Code Climate](https://codeclimate.com/github/jimmycuadra/lita-digitalocean.png)](https://codeclimate.com/github/jimmycuadra/lita-digitalocean)
+[![Coverage Status](https://coveralls.io/repos/jimmycuadra/lita-digitalocean/badge.png)](https://coveralls.io/r/jimmycuadra/lita-digitalocean)
+
 **lita-digitalocean** is a handler plugin for [Lita](https://www.lita.io/) that manages [DigitalOcean](https://www.digitalocean.com/) services.
 
 ## Installation
