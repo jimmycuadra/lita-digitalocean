@@ -10,6 +10,7 @@ module Lita
       end
 
       route /^do\s+ssh_?keys?\s+list\s*$/i, :ssh_keys_list, command: true
+      route /^do\s+ssh_?keys?\s+show\s+(\d+)\s*$/i, :ssh_keys_show, command: true
 
       def ssh_keys_list(response)
         result = client.ssh_keys.list
@@ -23,6 +24,12 @@ module Lita
             response.reply("#{key.id}: #{key.name}")
           end
         end
+      end
+
+      def ssh_keys_show(response)
+        result = client.ssh_keys.show(response.matches[0][0])
+        key = result.ssh_key
+        response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
       end
 
       private
