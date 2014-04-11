@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean, lita_handler: true do
+  it { routes_command("do regions list").to(:regions_list) }
   it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:ssh_keys_add) }
   it { routes_command("do ssh keys delete 123").to(:ssh_keys_delete) }
   it do
@@ -15,11 +16,13 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   let(:client) do
     instance_double(
       "::DigitalOcean::API",
+      regions: client_regions,
       ssh_keys: client_ssh_keys,
       sizes: client_sizes
     )
   end
 
+  let(:client_regions) { instance_double("::DigitalOcean::Resource::Region") }
   let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
   let(:client_sizes) { instance_double("::DigitalOcean::Resource::Size") }
 
@@ -35,6 +38,30 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
     ).and_return(true)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
+  end
+
+  describe "regions commands" do
+    let(:do_list) do
+      instance_double(
+        "Hashie::Rash",
+        status: "OK",
+        regions: [
+          instance_double("Hashie::Rash", id: 1, name: "New York 1", slug: "nyc1"),
+          instance_double("Hashie::Rash", id: 2, name: "Amsterdam 1", slug: "ams1")
+        ]
+      )
+    end
+
+    describe "#regions_list" do
+      it "responds with a list of all regions" do
+        allow(client_regions).to receive(:list).and_return(do_list)
+        send_command("do regions list")
+        expect(replies).to eq ([
+          "ID: 1, Name: New York 1, Slug: nyc1",
+          "ID: 2, Name: Amsterdam 1, Slug: ams1"
+        ])
+      end
+    end
   end
 
   describe "ssh key commands" do

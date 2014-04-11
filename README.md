@@ -48,7 +48,11 @@ Not yet implemented. Coming soon!
 
 ### Region commands
 
-Not yet implemented. Coming soon!
+To list all the possible regions:
+
+```
+Lita: do regions list
+```
 
 ### SSH key commands
 

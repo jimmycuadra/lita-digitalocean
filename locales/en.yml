@@ -8,6 +8,9 @@ en:
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
+          regions:
+            list_key: do regions list
+            list_value: Lists all available regions.
           ssh_keys:
             add_key: do ssh keys add NAME PUBLIC_KEY
             add_value: Adds a new SSH key.

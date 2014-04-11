@@ -16,6 +16,10 @@ module Lita
 
       public
 
+      do_route /^do\s+regions?\s+list$/i, :regions_list, {
+        t("help.regions.list_key") => t("help.regions.list_value")
+      }
+
       do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :ssh_keys_add, {
         t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
       }
@@ -39,6 +43,16 @@ module Lita
       do_route /^do\s+sizes\s+list$/, :sizes_list, {
         t("help.sizes.list_key") => t("help.sizes.list_value")
       }
+
+      def regions_list(response)
+        do_response = do_call(response) do |client|
+          client.regions.list
+        end or return
+
+        messages = do_response.regions.map { |r| "ID: #{r.id}, Name: #{r.name}, Slug: #{r.slug}" }
+
+        response.reply(*messages)
+      end
 
       def ssh_keys_add(response)
         name, public_key = response.args[3..4]
