@@ -31,7 +31,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
 
       it "replies with a list of key IDs and names" do
         send_command("do ssh_keys list")
-        expect(replies).to eq ["1234: My Key", "5678: Your Key"]
+        expect(replies).to eq ["1234 (My Key)", "5678 (Your Key)"]
       end
     end
 

@@ -21,7 +21,7 @@ module Lita
           response.reply(t("ssh_keys.list.empty"))
         else
           result.ssh_keys.each do |key|
-            response.reply("#{key.id}: #{key.name}")
+            response.reply("#{key.id} (#{key.name})")
           end
         end
       end
