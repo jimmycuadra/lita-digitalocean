@@ -32,7 +32,59 @@ end
 
 ## Usage
 
-TODO: Describe the plugin's features and how to use them.
+To use any of the DigitalOcean commands, the user sending the message must be in the `:digitalocean_admins` authorization group.
+
+### Domain commands
+
+Not yet implemented. Coming soon!
+
+### Droplet commands
+
+Not yet implemented. Coming soon!
+
+### Image commands
+
+Not yet implemented. Coming soon!
+
+### Region commands
+
+Not yet implemented. Coming soon!
+
+### SSH key commands
+
+To add a new SSH key and get back its ID:
+
+```
+Lita: do ssh keys add NAME PUBLIC_KEY
+```
+
+To delete an SSH key by its ID:
+
+```
+Lita: do ssh keys delete ID
+```
+
+To edit the name and/or public key of an existing SSH key:
+
+```
+Lita: do ssh keys edit ID [name=NAME] [public_key=PUBLIC_KEY]
+```
+
+To list the names and IDs of all SSH keys:
+
+```
+Lita: do ssh keys list
+```
+
+To show the name and public key of an SSH key by ID:
+
+```
+Lita: do ssh keys show ID
+```
+
+### Size commands
+
+Not yet implemented. Coming soon!
 
 ## License
 
