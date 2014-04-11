@@ -16,6 +16,10 @@ module Lita
 
       public
 
+      do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :ssh_keys_add, {
+        t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
+      }
+
       do_route /^do\s+ssh\s+keys?\s+list$/i, :ssh_keys_list, {
         t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value")
       }
@@ -24,9 +28,22 @@ module Lita
         t("help.ssh_keys.show_key") => t("help.ssh_keys.show_value"),
       }
 
-      do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :ssh_keys_add, {
-        t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
-      }
+      def ssh_keys_add(response)
+        name, public_key = response.args[3..4]
+
+        unless name && public_key
+          return response.reply("#{t('format')}: #{t('help.ssh_keys.add_key')}")
+        end
+
+        do_response = do_call(response) do |client|
+          client.ssh_keys.add(name: name, ssh_pub_key: public_key)
+        end or return
+
+        key = do_response.ssh_key
+        response.reply(
+          t("ssh_keys.add.created", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
+        )
+      end
 
       def ssh_keys_list(response)
         do_response = do_call(response) do |client|
@@ -49,23 +66,6 @@ module Lita
 
         key = do_response.ssh_key
         response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
-      end
-
-      def ssh_keys_add(response)
-        name, public_key = response.args[3..4]
-
-        unless name && public_key
-          return response.reply("#{t('format')}: #{t('help.ssh_keys.add_key')}")
-        end
-
-        do_response = do_call(response) do |client|
-          client.ssh_keys.add(name: name, ssh_pub_key: public_key)
-        end or return
-
-        key = do_response.ssh_key
-        response.reply(
-          t("ssh_keys.add.created", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
-        )
       end
 
       private

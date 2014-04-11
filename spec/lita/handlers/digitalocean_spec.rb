@@ -1,10 +1,9 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean, lita_handler: true do
-  it { routes_command("do ssh keys list").to(:ssh_keys_list) }
-  it { routes_command("do ssh key list").to(:ssh_keys_list) }
-  it { routes_command("do ssh keys show 123").to(:ssh_keys_show) }
   it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:ssh_keys_add) }
+  it { routes_command("do ssh keys list").to(:ssh_keys_list) }
+  it { routes_command("do ssh keys show 123").to(:ssh_keys_show) }
 
   let(:client) { instance_double("::DigitalOcean::API") }
 
@@ -55,6 +54,19 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
       )
     end
 
+    describe "#ssh_keys_add" do
+      it "responds with the details of the new key" do
+        allow(client).to receive_message_chain(:ssh_keys, :add).and_return(do_key)
+        send_command("do ssh keys add 'My Key' 'ssh-rsa abcdefg'")
+        expect(replies.last).to eq("Created new SSH key: 123 (My Key): ssh-rsa abcdefg")
+      end
+
+      it "responds with an error message if name or public key is missing" do
+        send_command("do ssh keys add foo")
+        expect(replies.last).to eq("Format: do ssh keys add NAME PUBLIC_KEY")
+      end
+    end
+
     describe "#ssh_keys_list" do
       it "returns a list of key IDs and names" do
         allow(client).to receive_message_chain(:ssh_keys, :list).and_return(do_list)
@@ -74,19 +86,6 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
         allow(client).to receive_message_chain(:ssh_keys, :show).and_return(do_key)
         send_command("do ssh keys show 123")
         expect(replies.last).to eq("123 (My Key): ssh-rsa abcdefg")
-      end
-    end
-
-    describe "#ssh_keys_add" do
-      it "responds with the details of the new key" do
-        allow(client).to receive_message_chain(:ssh_keys, :add).and_return(do_key)
-        send_command("do ssh keys add 'My Key' 'ssh-rsa abcdefg'")
-        expect(replies.last).to eq("Created new SSH key: 123 (My Key): ssh-rsa abcdefg")
-      end
-
-      it "responds with an error message if name or public key is missing" do
-        send_command("do ssh keys add foo")
-        expect(replies.last).to eq("Format: do ssh keys add NAME PUBLIC_KEY")
       end
     end
   end
