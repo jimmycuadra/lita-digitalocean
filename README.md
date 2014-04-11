@@ -84,7 +84,11 @@ Lita: do ssh keys show ID
 
 ### Size commands
 
-Not yet implemented. Coming soon!
+To list all the possible image sizes:
+
+```
+Lita: do sizes list
+```
 
 ## License
 

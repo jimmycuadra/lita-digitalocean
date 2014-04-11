@@ -19,6 +19,9 @@ en:
             list_value: Lists all SSH keys.
             show_key: do ssh keys show ID
             show_value: Shows the public key for SSH key with the given ID.
+          sizes:
+            list_key: do sizes list
+            list_value: List all the possible image sizes.
         ssh_keys:
           add:
             created: "Created new SSH key: %{message}"

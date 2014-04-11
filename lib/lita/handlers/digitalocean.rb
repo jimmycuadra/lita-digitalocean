@@ -36,6 +36,10 @@ module Lita
         t("help.ssh_keys.show_key") => t("help.ssh_keys.show_value"),
       }
 
+      do_route /^do\s+sizes\s+list$/, :sizes_list, {
+        t("help.sizes.list_key") => t("help.sizes.list_value")
+      }
+
       def ssh_keys_add(response)
         name, public_key = response.args[3..4]
 
@@ -101,6 +105,16 @@ module Lita
 
         key = do_response.ssh_key
         response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
+      end
+
+      def sizes_list(response)
+        do_response = do_call(response) do |client|
+          client.sizes.list
+        end or return
+
+        messages = do_response.sizes.map { |s| "ID: #{s.id}, Name: #{s.name}, Slug: #{s.slug}" }
+
+        response.reply(*messages)
       end
 
       private
