@@ -1,35 +1,35 @@
 require "rash"
 require "digital_ocean"
 
+require_relative "digitalocean/ssh_keys"
+
 module Lita
   module Handlers
     class Digitalocean < Handler
+      SUBMODULES = {
+        ssh_keys: SSHKeys
+      }
+
       def self.default_config(config)
         config.client_id = nil
         config.api_key = nil
       end
 
-      route /^do\s+ssh_?keys?\s+list\s*$/i, :ssh_keys_list, command: true
-      route /^do\s+ssh_?keys?\s+show\s+(\d+)\s*$/i, :ssh_keys_show, command: true
+      route /^(?:do|digital\s*ocean)/i, :dispatch, command: true
 
-      def ssh_keys_list(response)
-        result = client.ssh_keys.list
+      def dispatch(response)
+        submodule_name, subcommand_name, *_args = response.args
+        submodule_class = SUBMODULES[submodule_name.downcase.to_sym]
 
-        return response.reply(t("error")) if result.status != "OK"
+        if submodule_class
+          submodule = submodule_class.new(self, client)
 
-        if result.ssh_keys.empty?
-          response.reply(t("ssh_keys.list.empty"))
-        else
-          result.ssh_keys.each do |key|
-            response.reply("#{key.id} (#{key.name})")
+          subcommand = subcommand_name.downcase.to_sym
+
+          if submodule.respond_to?(subcommand)
+            submodule.public_send(subcommand, response)
           end
         end
-      end
-
-      def ssh_keys_show(response)
-        result = client.ssh_keys.show(response.matches[0][0])
-        key = result.ssh_key
-        response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
       end
 
       private
