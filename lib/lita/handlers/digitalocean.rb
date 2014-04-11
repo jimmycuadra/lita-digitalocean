@@ -6,6 +6,8 @@ require_relative "digitalocean/ssh_keys"
 module Lita
   module Handlers
     class Digitalocean < Handler
+      class APIError < StandardError; end
+
       SUBMODULES = {
         ssh_keys: SSHKeys
       }
@@ -27,9 +29,23 @@ module Lita
           subcommand = subcommand_name.downcase.to_sym
 
           if submodule.respond_to?(subcommand)
-            submodule.public_send(subcommand, response)
+            begin
+              submodule.public_send(subcommand, response)
+            rescue APIError => e
+              response.reply(t("error", message: e.message))
+            end
           end
         end
+      end
+
+      def do_call
+        do_response = yield
+
+        if do_response.status != "OK"
+          raise APIError.new(do_response.message)
+        end
+
+        do_response
       end
 
       private

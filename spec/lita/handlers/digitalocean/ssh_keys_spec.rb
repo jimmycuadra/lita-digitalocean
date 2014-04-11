@@ -6,6 +6,8 @@ describe Lita::Handlers::Digitalocean::SSHKeys do
   let(:client) { instance_double("::DigitalOcean::API") }
   let(:response) { instance_double("Lita::Response") }
 
+  before { allow(handler).to receive(:do_call).and_yield }
+
   describe "#list" do
     before do
       allow(client).to receive_message_chain(:ssh_keys, :list).and_return(do_response)

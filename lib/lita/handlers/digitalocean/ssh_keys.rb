@@ -6,7 +6,7 @@ module Lita
 
         attr_reader :client, :handler
 
-        def_delegators :handler, :t
+        def_delegators :handler, :t, :do_call
 
         def initialize(handler, client)
           @handler = handler
@@ -14,7 +14,7 @@ module Lita
         end
 
         def list(response)
-          do_response = client.ssh_keys.list
+          do_response = do_call { client.ssh_keys.list }
 
           return response.reply(t("error")) if do_response.status != "OK"
 
@@ -28,7 +28,7 @@ module Lita
         end
 
         def show(response)
-          do_response = client.ssh_keys.show(response.args[2..-1])
+          do_response = do_call { client.ssh_keys.show(response.args[2..-1]) }
           key = do_response.ssh_key
           response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
         end
