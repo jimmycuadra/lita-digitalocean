@@ -20,6 +20,10 @@ module Lita
         t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
       }
 
+      do_route /^do\s+ssh\s+keys?\s+delete\s+(\d+)$/i, :ssh_keys_delete, {
+        t("help.ssh_keys.delete_key") => t("help.ssh_keys.delete_value")
+      }
+
       do_route /^do\s+ssh\s+keys?\s+edit\s+(\d+)\s+.+$/i, :ssh_keys_edit, {
         t("help.ssh_keys.edit_key") => t("help.ssh_keys.edit_value")
       }
@@ -47,6 +51,16 @@ module Lita
         response.reply(
           t("ssh_keys.add.created", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
         )
+      end
+
+      def ssh_keys_delete(response)
+        key_id = response.matches[0][0]
+
+        do_call(response) do |client|
+          client.ssh_keys.delete(key_id)
+        end or return
+
+        response.reply(t("ssh_keys.delete.deleted", key_id: key_id))
       end
 
       def ssh_keys_edit(response)

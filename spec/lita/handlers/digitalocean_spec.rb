@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe Lita::Handlers::Digitalocean, lita_handler: true do
   it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:ssh_keys_add) }
+  it { routes_command("do ssh keys delete 123").to(:ssh_keys_delete) }
   it do
     routes_command(
       "do ssh keys edit 123 name=foo public_key='ssh-rsa changed'"
@@ -66,6 +67,8 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
       )
     end
 
+    let(:do_delete) { instance_double("Hashie::Rash", status: "OK") }
+
     describe "#ssh_keys_add" do
       it "responds with the details of the new key" do
         allow(client_ssh_keys).to receive(:add).with(
@@ -79,6 +82,14 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
       it "responds with an error message if name or public key is missing" do
         send_command("do ssh keys add foo")
         expect(replies.last).to eq("Format: do ssh keys add NAME PUBLIC_KEY")
+      end
+    end
+
+    describe "#ssh_keys_delete" do
+      it "responds with a success message" do
+        allow(client_ssh_keys).to receive(:delete).with("123").and_return(do_delete)
+        send_command("do ssh keys delete 123")
+        expect(replies.last).to eq("Deleted SSH key: 123")
       end
     end
 
