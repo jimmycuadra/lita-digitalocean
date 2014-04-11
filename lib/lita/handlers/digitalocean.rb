@@ -20,6 +20,10 @@ module Lita
         t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
       }
 
+      do_route /^do\s+ssh\s+keys?\s+edit\s+(\d+)\s+.+$/i, :ssh_keys_edit, {
+        t("help.ssh_keys.edit_key") => t("help.ssh_keys.edit_value")
+      }
+
       do_route /^do\s+ssh\s+keys?\s+list$/i, :ssh_keys_list, {
         t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value")
       }
@@ -42,6 +46,19 @@ module Lita
         key = do_response.ssh_key
         response.reply(
           t("ssh_keys.add.created", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
+        )
+      end
+
+      def ssh_keys_edit(response)
+        args = extract_named_args(response.args, :name, :public_key)
+
+        do_response = do_call(response) do |client|
+          client.ssh_keys.edit(response.matches[0][0], args)
+        end or return
+
+        key = do_response.ssh_key
+        response.reply(
+          t("ssh_keys.edit.updated", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
         )
       end
 
@@ -100,6 +117,11 @@ module Lita
         end
 
         do_response
+      end
+
+      # TODO: This doesn't actually work!
+      def extract_named_args(args, *keys)
+        args
       end
     end
 

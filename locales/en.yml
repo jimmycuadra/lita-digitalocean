@@ -9,14 +9,18 @@ en:
         format: Format
         help:
           ssh_keys:
+            add_key: do ssh keys add NAME PUBLIC_KEY
+            add_value: Adds a new SSH key.
+            edit_key: "do ssh keys edit ID [name=NAME] [public_key=PUBLIC_KEY]"
+            edit_value: Change the NAME or PUBLIC_KEY of the SSH key with the given ID.
             list_key: do ssh keys list
             list_value: Lists all SSH keys.
             show_key: do ssh keys show ID
             show_value: Shows the public key for SSH key with the given ID.
-            add_key: do ssh keys add NAME PUBLIC_KEY
-            add_value: Adds a new SSH key.
         ssh_keys:
           add:
             created: "Created new SSH key: %{message}"
+          edit:
+            updated: "Updated SSH key: %{message}"
           list:
             empty: No SSH keys have been added yet.
