@@ -14,6 +14,8 @@ en:
             list_key: "do images list [FILTER]"
             list_value: >-
               Lists available images, optionally filtered by FILTER ("global" or "my_images").
+            show_key: do images show ID_OR_SLUG
+            show_value: Shows the details of an image with the given ID or slug.
           regions:
             list_key: do regions list
             list_value: Lists all available regions.

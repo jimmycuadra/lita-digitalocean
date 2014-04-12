@@ -24,6 +24,10 @@ module Lita
         t("help.images.list_key") => t("help.images.list_value")
       }
 
+      do_route /^do\s+images?\s+show\s([^\s]+)$/i, :images_show, {
+        t("help.images.show_key") => t("help.images.show_value")
+      }
+
       do_route /^do\s+regions?\s+list$/i, :regions_list, {
         t("help.regions.list_key") => t("help.regions.list_value")
       }
@@ -80,6 +84,18 @@ module Lita
         end
 
         response.reply(*messages)
+      end
+
+      def images_show(response)
+        image_id = response.args[2]
+
+        do_response = do_call(response) do |client|
+          client.images.show(image_id)
+        end or return
+
+        image = do_response.image
+
+        response.reply "ID: #{image.id}, Name: #{image.name}, Slug: #{image.slug}, Distribution: #{image.distribution}, Public: #{image.public}, Regions: #{format_array(image.regions)}, Region Slugs: #{format_array(image.region_slugs)}"
       end
 
       def regions_list(response)
