@@ -25,6 +25,9 @@ en:
           sizes:
             list_key: do sizes list
             list_value: List all the possible image sizes.
+        images:
+          delete:
+            deleted: "Deleted image: %{image_id}"
         ssh_keys:
           add:
             created: "Created new SSH key: %{message}"

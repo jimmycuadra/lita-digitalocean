@@ -16,6 +16,10 @@ module Lita
 
       public
 
+      do_route /^do\s+images?\s+delete\s+(\d+)$/i, :images_delete, {
+        t("help.images.delete_key") => t("help.images.delete_value")
+      }
+
       do_route /^do\s+regions?\s+list$/i, :regions_list, {
         t("help.regions.list_key") => t("help.regions.list_value")
       }
@@ -43,6 +47,16 @@ module Lita
       do_route /^do\s+sizes\s+list$/, :sizes_list, {
         t("help.sizes.list_key") => t("help.sizes.list_value")
       }
+
+      def images_delete(response)
+        image_id = response.matches[0][0]
+
+        do_response = do_call(response) do |client|
+          client.images.delete(image_id)
+        end or return
+
+        response.reply(t("images.delete.deleted", image_id: image_id))
+      end
 
       def regions_list(response)
         do_response = do_call(response) do |client|

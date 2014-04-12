@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean, lita_handler: true do
+  it { routes_command("do images delete 123").to(:images_delete) }
   it { routes_command("do regions list").to(:regions_list) }
   it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:ssh_keys_add) }
   it { routes_command("do ssh keys delete 123").to(:ssh_keys_delete) }
@@ -16,15 +17,19 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   let(:client) do
     instance_double(
       "::DigitalOcean::API",
+      images: client_images,
       regions: client_regions,
       ssh_keys: client_ssh_keys,
       sizes: client_sizes
     )
   end
 
+  let(:client_images) { instance_double("::DigitalOcean::Resource::Image") }
   let(:client_regions) { instance_double("::DigitalOcean::Resource::Region") }
   let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
   let(:client_sizes) { instance_double("::DigitalOcean::Resource::Size") }
+
+  let(:do_delete) { instance_double("Hashie::Rash", status: "OK") }
 
   before do
     Lita.config.handlers.digitalocean.tap do |config|
@@ -38,6 +43,16 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
     ).and_return(true)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
+  end
+
+  describe "images commands" do
+    describe "#images_delete" do
+      it "responds with a success message" do
+        allow(client_images).to receive(:delete).with("123").and_return(do_delete)
+        send_command("do images delete 123")
+        expect(replies.last).to eq("Deleted image: 123")
+      end
+    end
   end
 
   describe "regions commands" do
@@ -96,8 +111,6 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
         )
       )
     end
-
-    let(:do_delete) { instance_double("Hashie::Rash", status: "OK") }
 
     describe "#ssh_keys_add" do
       it "responds with the details of the new key" do
