@@ -1,6 +1,13 @@
 require "digital_ocean"
 require "rash"
 
+require_relative "digitalocean/domain"
+require_relative "digitalocean/droplet"
+require_relative "digitalocean/image"
+require_relative "digitalocean/region"
+require_relative "digitalocean/ssh_key"
+require_relative "digitalocean/size"
+
 module Lita
   module Handlers
     class Digitalocean < Handler
@@ -17,164 +24,12 @@ module Lita
 
       public
 
-      do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :images_delete, {
-        t("help.images.delete_key") => t("help.images.delete_value")
-      }
-
-      do_route /^do\s+images?\s+list\s*.*$/i, :images_list, {
-        t("help.images.list_key") => t("help.images.list_value")
-      }
-
-      do_route /^do\s+images?\s+show\s([^\s]+)$/i, :images_show, {
-        t("help.images.show_key") => t("help.images.show_value")
-      }
-
-      do_route /^do\s+regions?\s+list$/i, :regions_list, {
-        t("help.regions.list_key") => t("help.regions.list_value")
-      }
-
-      do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :ssh_keys_add, {
-        t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
-      }
-
-      do_route /^do\s+ssh\s+keys?\s+delete\s+(\d+)$/i, :ssh_keys_delete, {
-        t("help.ssh_keys.delete_key") => t("help.ssh_keys.delete_value")
-      }
-
-      do_route /^do\s+ssh\s+keys?\s+edit\s+(\d+)\s+.+$/i, :ssh_keys_edit, {
-        t("help.ssh_keys.edit_key") => t("help.ssh_keys.edit_value")
-      }
-
-      do_route /^do\s+ssh\s+keys?\s+list$/i, :ssh_keys_list, {
-        t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value")
-      }
-
-      do_route /^do\s+ssh\s+keys?\s+show\s+(\d+)$/i, :ssh_keys_show, {
-        t("help.ssh_keys.show_key") => t("help.ssh_keys.show_value"),
-      }
-
-      do_route /^do\s+sizes\s+list$/, :sizes_list, {
-        t("help.sizes.list_key") => t("help.sizes.list_value")
-      }
-
-      def images_delete(response)
-        image_id = response.args[2]
-
-        do_response = do_call(response) do |client|
-          client.images.delete(image_id)
-        end or return
-
-        response.reply(t("images.delete.deleted", image_id: image_id))
-      end
-
-      def images_list(response)
-        filter = response.args[2]
-        normalized_filter = filter.to_s.downcase
-        options = {}
-
-        if filter && %(global my_images).include?(normalized_filter)
-          options[:filter] = normalized_filter
-        end
-
-        do_response = do_call(response) do |client|
-          client.images.list(options)
-        end or return
-
-        messages = do_response[:images].map { |image| t("images.details", formatted_image(image)) }
-
-        response.reply(*messages)
-      end
-
-      def images_show(response)
-        image_id = response.args[2]
-
-        do_response = do_call(response) do |client|
-          client.images.show(image_id)
-        end or return
-
-        response.reply(t("images.details", formatted_image(do_response[:image])))
-      end
-
-      def regions_list(response)
-        do_response = do_call(response) do |client|
-          client.regions.list
-        end or return
-
-        messages = do_response[:regions].map { |region|  t("regions.details", region) }
-
-        response.reply(*messages)
-      end
-
-      def ssh_keys_add(response)
-        name, public_key = response.args[3..4]
-
-        unless name && public_key
-          return response.reply("#{t('format')}: #{t('help.ssh_keys.add_key')}")
-        end
-
-        do_response = do_call(response) do |client|
-          client.ssh_keys.add(name: name, ssh_pub_key: public_key)
-        end or return
-
-        response.reply(t("ssh_keys.add.created", do_response[:ssh_key]))
-      end
-
-      def ssh_keys_delete(response)
-        key_id = response.matches[0][0]
-
-        do_call(response) do |client|
-          client.ssh_keys.delete(key_id)
-        end or return
-
-        response.reply(t("ssh_keys.delete.deleted", key_id: key_id))
-      end
-
-      def ssh_keys_edit(response)
-        args = extract_named_args(response.args, :name, :public_key)
-
-        if args[:public_key]
-          args[:ssh_pub_key] = args.delete(:public_key)
-        end
-
-        do_response = do_call(response) do |client|
-          client.ssh_keys.edit(response.matches[0][0], args)
-        end or return
-
-        response.reply(t("ssh_keys.edit.updated", do_response[:ssh_key]))
-      end
-
-      def ssh_keys_list(response)
-        do_response = do_call(response) do |client|
-          client.ssh_keys.list
-        end or return
-
-        if do_response[:ssh_keys].empty?
-          response.reply(t("ssh_keys.list.empty"))
-        else
-          do_response[:ssh_keys].each do |key|
-            response.reply("#{key[:id]} (#{key[:name]})")
-          end
-        end
-      end
-
-      def ssh_keys_show(response)
-        do_response = do_call(response) do |client|
-          client.ssh_keys.show(response.matches[0][0])
-        end or return
-
-        key = do_response[:ssh_key]
-        response.reply("#{key[:id]} (#{key[:name]}): #{key[:ssh_pub_key]}")
-      end
-
-      def sizes_list(response)
-        do_response = do_call(response) do |client|
-          client.sizes.list
-        end or return
-
-        messages = do_response[:sizes].map { |size| t("sizes.details", size) }
-
-        response.reply(*messages)
-      end
+      include Domain
+      include Droplet
+      include Image
+      include Region
+      include SSHKey
+      include Size
 
       private
 
