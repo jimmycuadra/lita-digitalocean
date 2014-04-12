@@ -10,9 +10,10 @@ en:
         help:
           images:
             delete_key: do images delete ID_OR_SLUG
-            delete_value: Delete an image with the given ID or slug.
-            list_key: do images list
-            delete_value: Lists all available images.
+            delete_value: Deletes an image with the given ID or slug.
+            list_key: "do images list [FILTER]"
+            list_value: >-
+              Lists available images, optionally filtered by FILTER ("global" or "my_images").
           regions:
             list_key: do regions list
             list_value: Lists all available regions.
@@ -20,16 +21,16 @@ en:
             add_key: do ssh keys add NAME PUBLIC_KEY
             add_value: Adds a new SSH key.
             delete_key: do ssh keys delete ID
-            delete_value: Delete the SSH key with the given ID.
+            delete_value: Deletes the SSH key with the given ID.
             edit_key: "do ssh keys edit ID [name=NAME] [public_key=PUBLIC_KEY]"
-            edit_value: Change the NAME and/or PUBLIC_KEY of the SSH key with the given ID.
+            edit_value: Changes the NAME and/or PUBLIC_KEY of the SSH key with the given ID.
             list_key: do ssh keys list
             list_value: Lists all SSH keys.
             show_key: do ssh keys show ID
             show_value: Shows the public key for SSH key with the given ID.
           sizes:
             list_key: do sizes list
-            list_value: List all the possible image sizes.
+            list_value: Lists all the possible image sizes.
         images:
           delete:
             deleted: "Deleted image: %{image_id}"
