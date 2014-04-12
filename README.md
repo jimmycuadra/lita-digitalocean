@@ -36,7 +36,61 @@ To use any of the DigitalOcean commands, the user sending the message must be in
 
 ### Domain commands
 
-Not yet implemented. Coming soon!
+To create a new DNS record set:
+
+```
+Lita: do domains create NAME IP
+```
+
+To delete a DNS record set:
+
+```
+Lita: do domains delete DOMAIN_NAME_OR_ID
+```
+
+To list all DNS record sets:
+
+```
+Lita: do domains list
+```
+
+To show the details of a DNS record set:
+
+```
+Lita: do domains show DOMAIN_NAME_OR_ID
+```
+
+### Domain record commands
+
+To create a new DNS record:
+
+```
+Lita: do domain records create DOMAIN_NAME_OR_ID TYPE DATA [name=NAME] [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+```
+
+To delete a DNS record:
+
+```
+Lita: do domain records delete DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
+```
+
+To edit a DNS record:
+
+```
+Lita: do domain records edit DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID TYPE DATA [name=NAME] [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+```
+
+To list all DNS records for a DNS record set:
+
+```
+Lita: do domain records list DOMAIN_NAME_OR_ID
+```
+
+To show the details of a DNS record:
+
+```
+Lita: do domain records show DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
+```
 
 ### Droplet commands
 
