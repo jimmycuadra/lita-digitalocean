@@ -16,8 +16,12 @@ module Lita
 
       public
 
-      do_route /^do\s+images?\s+delete\s+(\d+)$/i, :images_delete, {
+      do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :images_delete, {
         t("help.images.delete_key") => t("help.images.delete_value")
+      }
+
+      do_route /^do\s+images?\s+list\s*.*$/i, :images_list, {
+        t("help.images.list_key") => t("help.images.list_value")
       }
 
       do_route /^do\s+regions?\s+list$/i, :regions_list, {
@@ -49,13 +53,33 @@ module Lita
       }
 
       def images_delete(response)
-        image_id = response.matches[0][0]
+        image_id = response.args[2]
 
         do_response = do_call(response) do |client|
           client.images.delete(image_id)
         end or return
 
         response.reply(t("images.delete.deleted", image_id: image_id))
+      end
+
+      def images_list(response)
+        filter = response.args[2]
+        normalized_filter = filter.to_s.downcase
+        options = {}
+
+        if filter && %(global my_images).include?(normalized_filter)
+          options[:filter] = normalized_filter
+        end
+
+        do_response = do_call(response) do |client|
+          client.images.list(options)
+        end or return
+
+        messages = do_response.images.map do |image|
+          "ID: #{image.id}, Name: #{image.name}, Slug: #{image.slug}, Distribution: #{image.distribution}, Public: #{image.public}, Regions: #{format_array(image.regions)}, Region Slugs: #{format_array(image.region_slugs)}"
+        end
+
+        response.reply(*messages)
       end
 
       def regions_list(response)
@@ -193,6 +217,10 @@ module Lita
 
           hash
         end
+      end
+
+      def format_array(array)
+        %([#{array.join(",")}])
       end
     end
 

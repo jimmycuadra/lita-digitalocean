@@ -8,6 +8,11 @@ en:
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
+          images:
+            delete_key: do images delete ID_OR_SLUG
+            delete_value: Delete an image with the given ID or slug.
+            list_key: do images list
+            delete_value: Lists all available images.
           regions:
             list_key: do regions list
             list_value: Lists all available regions.
