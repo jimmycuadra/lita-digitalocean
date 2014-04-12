@@ -1,11 +1,43 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean, lita_handler: true do
+
+  # Domain routes
+
+  it { routes_command("do domains create example.com 10.10.10.10").to(:domains_create) }
+  it { routes_command("do domains delete example.com").to(:domains_delete) }
+  it { routes_command("do domains list").to(:domains_list) }
+  it { routes_command("do domains show example.com").to(:domains_show) }
+
+  # Domain record routes
+
+  it do
+    routes_command(
+      "do domain records create example.com txt 'some value' name=example.com"
+    ).to(:domain_records_create)
+  end
+  it { routes_command("do domain records delete example.com 123").to(:domain_records_delete) }
+  it do
+    routes_command(
+      "do domain records edit example.com 123 txt 'some value' name=example.com"
+    ).to(:domain_records_edit)
+  end
+  it { routes_command("do domain records list example.com").to(:domain_records_list) }
+  it { routes_command("do domain records show example.com 123").to(:domain_records_show) }
+
+  # Images
+
   it { routes_command("do images delete 123").to(:images_delete) }
   it { routes_command("do images list").to(:images_list) }
   it { routes_command("do images list filter").to(:images_list) }
   it { routes_command("do images show 123").to(:images_show) }
+
+  # Region routes
+
   it { routes_command("do regions list").to(:regions_list) }
+
+  # SSH key routes
+
   it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:ssh_keys_add) }
   it { routes_command("do ssh keys delete 123").to(:ssh_keys_delete) }
   it do
@@ -15,7 +47,12 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   end
   it { routes_command("do ssh keys list").to(:ssh_keys_list) }
   it { routes_command("do ssh keys show 123").to(:ssh_keys_show) }
+
+  # Size routes
+
   it { routes_command("do sizes list").to(:sizes_list) }
+
+  # Common setup
 
   let(:client) do
     instance_double(

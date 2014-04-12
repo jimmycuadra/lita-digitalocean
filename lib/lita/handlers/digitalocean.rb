@@ -2,6 +2,7 @@ require "digital_ocean"
 require "rash"
 
 require_relative "digitalocean/domain"
+require_relative "digitalocean/domain_record"
 require_relative "digitalocean/droplet"
 require_relative "digitalocean/image"
 require_relative "digitalocean/region"
@@ -25,6 +26,7 @@ module Lita
       public
 
       include Domain
+      include DomainRecord
       include Droplet
       include Image
       include Region
