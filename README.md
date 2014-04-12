@@ -44,7 +44,35 @@ Not yet implemented. Coming soon!
 
 ### Image commands
 
-Not yet implemented. Coming soon!
+To delete an image:
+
+```
+Lita: do images delete ID_OR_SLUG
+```
+
+To list all possible images:
+
+```
+Lita: do images list
+```
+
+To list only global images:
+
+```
+Lita: do images list global
+```
+
+To list only your own images:
+
+```
+Lita: do images list my_images
+```
+
+To show the details of an image:
+
+```
+Lita: do images show ID_OR_SLUG
+```
 
 ### Region commands
 
