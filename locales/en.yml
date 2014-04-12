@@ -1,3 +1,6 @@
+          # "ID: #{image.id}, Name: #{image.name}, Slug: #{image.slug}, Distribution: #{image.distribution}, Public: #{image.public}, Regions: #{format_array(image.regions)}, Region Slugs: #{format_array(image.region_slugs)}"
+# "ID: #{r.id}, Name: #{r.name}, Slug: #{r.slug}"
+# "#{key.id} (#{key.name}): #{key.ssh_pub_key}"
 en:
   lita:
     handlers:
@@ -34,14 +37,22 @@ en:
             list_key: do sizes list
             list_value: Lists all the possible image sizes.
         images:
+          details: >-
+            ID: %{id}, Name: %{name}, Slug: %{slug}, Distribution: %{distribution},
+            Public: %{public}, Regions: %{formatted_regions},
+            Region Slugs: %{formatted_region_slugs}
           delete:
             deleted: "Deleted image: %{image_id}"
+        regions:
+          details: "ID: %{id}, Name: %{name}, Slug: %{slug}"
+        sizes:
+          details: "ID: %{id}, Name: %{name}, Slug: %{slug}"
         ssh_keys:
           add:
-            created: "Created new SSH key: %{message}"
+            created: "Created new SSH key: %{id} (%{name}): %{ssh_pub_key}"
           delete:
             deleted: "Deleted SSH key: %{key_id}"
           edit:
-            updated: "Updated SSH key: %{message}"
+            updated: "Updated SSH key: %{id} (%{name}): %{ssh_pub_key}"
           list:
             empty: No SSH keys have been added yet.

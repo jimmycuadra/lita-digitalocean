@@ -32,7 +32,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
   let(:client_sizes) { instance_double("::DigitalOcean::Resource::Size") }
 
-  let(:do_delete) { instance_double("Hashie::Rash", status: "OK") }
+  let(:do_delete) { { status: "OK" } }
 
   before do
     Lita.config.handlers.digitalocean.tap do |config|
@@ -50,8 +50,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
 
   describe "images commands" do
     let(:public_image) do
-      instance_double(
-        "Hashie::Rash",
+      {
         id: 1601,
         name: "CentOS 5.8 x64",
         slug: "centos-5-8-x64",
@@ -59,7 +58,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
         public: true,
         regions: [1, 2, 3, 4, 5, 6],
         region_slugs: %w(nyc1 ams1 sfo1 nyc2 ams2 sgp1)
-      )
+      }
     end
 
       let(:public_image_message) do
@@ -79,40 +78,36 @@ IMAGE
 
     describe "#images_list" do
       let(:private_image) do
-        instance_double(
-          "Hashie::Rash",
-          id: 1602,
+        {
+          "id" => 1602,
           name: "CentOS 5.8 x32",
           slug: "centos-5-8-x32",
           distribution: "CentOS",
           public: false,
           regions: [1, 2, 3],
           region_slugs: %w(nyc1 ams1 sfo1)
-        )
+        }
       end
 
       let(:do_images) do
-        instance_double(
-          "Hashie::Rash",
+        {
           status: "OK",
           images: [public_image, private_image]
-        )
+        }
       end
 
       let(:do_public_images) do
-        instance_double(
-          "Hashie::Rash",
+        {
           status: "OK",
           images: [public_image]
-        )
+        }
       end
 
       let(:do_private_images) do
-        instance_double(
-          "Hashie::Rash",
+        {
           status: "OK",
           images: [private_image]
-        )
+        }
       end
 
       let(:private_image_message) do
@@ -140,7 +135,7 @@ IMAGE
     describe "#images_show" do
       it "responds with the details of the image" do
         allow(client_images).to receive(:show).with("123").and_return(
-          instance_double("Hashie::Rash", status: "OK", image: public_image)
+          { status: "OK", image: public_image }
         )
         send_command("do images show 123")
         expect(replies.last).to eq(public_image_message)
@@ -150,14 +145,13 @@ IMAGE
 
   describe "regions commands" do
     let(:do_list) do
-      instance_double(
-        "Hashie::Rash",
+      {
         status: "OK",
         regions: [
-          instance_double("Hashie::Rash", id: 1, name: "New York 1", slug: "nyc1"),
-          instance_double("Hashie::Rash", id: 2, name: "Amsterdam 1", slug: "ams1")
+          { id: 1, name: "New York 1", slug: "nyc1" },
+          { id: 2, name: "Amsterdam 1", slug: "ams1" }
         ]
-      )
+      }
     end
 
     describe "#regions_list" do
@@ -174,35 +168,31 @@ IMAGE
 
   describe "ssh key commands" do
     let(:do_list) do
-      instance_double(
-        "Hashie::Rash",
+      {
         status: "OK",
         ssh_keys: [
-          instance_double("Hashie::Rash", id: 123, name: "My Key"),
-          instance_double("Hashie::Rash", id: 456, name: "Your Key"),
+          { id: 123, name: "My Key" },
+          { id: 456, name: "Your Key" }
         ]
-      )
+      }
     end
 
     let(:do_list_empty) do
-      instance_double(
-        "Hashie::Rash",
+      {
         status: "OK",
         ssh_keys: []
-      )
+      }
     end
 
     let(:do_key) do
-      instance_double(
-        "Hashie::Rash",
+      {
         status: "OK",
-        ssh_key: instance_double(
-          "Hashie::Rash",
+        ssh_key: {
           id: 123,
           name: "My Key",
           ssh_pub_key: "ssh-rsa abcdefg"
-        )
-      )
+        }
+      }
     end
 
     describe "#ssh_keys_add" do
@@ -266,14 +256,13 @@ IMAGE
 
   describe "sizes commands" do
     let(:do_sizes) do
-      instance_double(
-        "Hashie::Rash",
+      {
         status: "OK",
         sizes: [
-          instance_double("Hashie::Rash", id: 33, name: "512MB", slug: "512mb"),
-          instance_double("Hashie::Rash", id: 34, name: "1GB", slug: "1gb")
+          { id: 33, name: "512MB", slug: "512mb" },
+          { id: 34, name: "1GB", slug: "1gb" }
         ]
-      )
+      }
     end
 
     describe "#sizes_list" do

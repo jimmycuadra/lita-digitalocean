@@ -1,4 +1,5 @@
 require "digital_ocean"
+require "rash"
 
 module Lita
   module Handlers
@@ -79,9 +80,7 @@ module Lita
           client.images.list(options)
         end or return
 
-        messages = do_response.images.map do |image|
-          "ID: #{image.id}, Name: #{image.name}, Slug: #{image.slug}, Distribution: #{image.distribution}, Public: #{image.public}, Regions: #{format_array(image.regions)}, Region Slugs: #{format_array(image.region_slugs)}"
-        end
+        messages = do_response[:images].map { |image| t("images.details", formatted_image(image)) }
 
         response.reply(*messages)
       end
@@ -93,9 +92,7 @@ module Lita
           client.images.show(image_id)
         end or return
 
-        image = do_response.image
-
-        response.reply "ID: #{image.id}, Name: #{image.name}, Slug: #{image.slug}, Distribution: #{image.distribution}, Public: #{image.public}, Regions: #{format_array(image.regions)}, Region Slugs: #{format_array(image.region_slugs)}"
+        response.reply(t("images.details", formatted_image(do_response[:image])))
       end
 
       def regions_list(response)
@@ -103,7 +100,7 @@ module Lita
           client.regions.list
         end or return
 
-        messages = do_response.regions.map { |r| "ID: #{r.id}, Name: #{r.name}, Slug: #{r.slug}" }
+        messages = do_response[:regions].map { |region|  t("regions.details", region) }
 
         response.reply(*messages)
       end
@@ -119,10 +116,7 @@ module Lita
           client.ssh_keys.add(name: name, ssh_pub_key: public_key)
         end or return
 
-        key = do_response.ssh_key
-        response.reply(
-          t("ssh_keys.add.created", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
-        )
+        response.reply(t("ssh_keys.add.created", do_response[:ssh_key]))
       end
 
       def ssh_keys_delete(response)
@@ -146,10 +140,7 @@ module Lita
           client.ssh_keys.edit(response.matches[0][0], args)
         end or return
 
-        key = do_response.ssh_key
-        response.reply(
-          t("ssh_keys.edit.updated", message: "#{key.id} (#{key.name}): #{key.ssh_pub_key}")
-        )
+        response.reply(t("ssh_keys.edit.updated", do_response[:ssh_key]))
       end
 
       def ssh_keys_list(response)
@@ -157,11 +148,11 @@ module Lita
           client.ssh_keys.list
         end or return
 
-        if do_response.ssh_keys.empty?
+        if do_response[:ssh_keys].empty?
           response.reply(t("ssh_keys.list.empty"))
         else
-          do_response.ssh_keys.each do |key|
-            response.reply("#{key.id} (#{key.name})")
+          do_response[:ssh_keys].each do |key|
+            response.reply("#{key[:id]} (#{key[:name]})")
           end
         end
       end
@@ -171,8 +162,8 @@ module Lita
           client.ssh_keys.show(response.matches[0][0])
         end or return
 
-        key = do_response.ssh_key
-        response.reply("#{key.id} (#{key.name}): #{key.ssh_pub_key}")
+        key = do_response[:ssh_key]
+        response.reply("#{key[:id]} (#{key[:name]}): #{key[:ssh_pub_key]}")
       end
 
       def sizes_list(response)
@@ -180,7 +171,7 @@ module Lita
           client.sizes.list
         end or return
 
-        messages = do_response.sizes.map { |s| "ID: #{s.id}, Name: #{s.name}, Slug: #{s.slug}" }
+        messages = do_response[:sizes].map { |size| t("sizes.details", size) }
 
         response.reply(*messages)
       end
@@ -211,8 +202,8 @@ module Lita
 
         do_response = yield client
 
-        if do_response.status != "OK"
-          response.reply(t("error", message: do_response.message))
+        if do_response[:status] != "OK"
+          response.reply(t("error", message: do_response[:message]))
           return
         end
 
@@ -237,6 +228,13 @@ module Lita
 
       def format_array(array)
         %([#{array.join(",")}])
+      end
+
+      def formatted_image(image)
+        Hashie::Rash.new image.merge(
+          formatted_regions: format_array(image[:regions]),
+          formatted_region_slugs: format_array(image[:region_slugs])
+        )
       end
     end
 
