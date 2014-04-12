@@ -1,6 +1,3 @@
-          # "ID: #{image.id}, Name: #{image.name}, Slug: #{image.slug}, Distribution: #{image.distribution}, Public: #{image.public}, Regions: #{format_array(image.regions)}, Region Slugs: #{format_array(image.region_slugs)}"
-# "ID: #{r.id}, Name: #{r.name}, Slug: #{r.slug}"
-# "#{key.id} (#{key.name}): #{key.ssh_pub_key}"
 en:
   lita:
     handlers:
@@ -11,6 +8,30 @@ en:
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
+          domains:
+            create_key: do domains create NAME IP
+            create_value: Creates a new DNS record set for domain NAME and IP.
+            delete_key: do domains delete DOMAIN_NAME_OR_ID
+            delete_value: Deletes the DNS record set for domain DOMAIN_NAME_OR_ID.
+            list_key: do domains list
+            list_value: Lists all DNS record sets.
+            show_key: do domains show DOMAIN_NAME_OR_ID
+            show_value: Shows the DNS record set details for domain DOMAIN_NAME_OR_ID.
+          domain_records:
+            create_key: >-
+              do domain records create DOMAIN_NAME_OR_ID TYPE DATA [name=NAME]
+              [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+            create_value: Creates a new DNS record for domain DOMAIN_NAME_OR_ID.
+            delete_key: do domain records delete DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
+            delete_value: Deletes the DNS record DOMAIN_RECORD_ID for domain DOMAIN_NAME_OR_ID.
+            edit_key: >-
+              do domain records edit DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID TYPE DATA [name=NAME]
+              [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+            edit_value: Edits DNS record DOMAIN_RECORD_ID for domain DOMAIN_NAME_OR_ID.
+            list_key: do domain records list DOMAIN_NAME_OR_ID
+            list_value: Lists all DNS records for domain DOMAIN_NAME_OR_ID.
+            show_key: do domain records show DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
+            show_value: Shows DNS record DOMAIN_RECORD_ID for domain DOMAIN_NAME_OR_ID.
           images:
             delete_key: do images delete ID_OR_SLUG
             delete_value: Deletes an image with the given ID or slug.
