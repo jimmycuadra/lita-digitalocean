@@ -94,7 +94,83 @@ Lita: do domain records show DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
 
 ### Droplet commands
 
-Not yet implemented. Coming soon!
+To create a droplet:
+
+```
+Lita: do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_SLUG [ssh_key_ids=SSH_KEY_IDS] [private_networking] [backups_enabled]
+```
+
+To delete a droplet, optionally writing zeroes to the disk first:
+
+```
+Lita: do droplets delete ID [scrub]
+```
+
+To list all droplets:
+
+```
+Lita: do droplets list
+```
+
+To reset the root password for a droplet:
+
+```
+Lita: do droplets password reset ID
+```
+
+To power cycle a droplet:
+
+```
+Lita: do droplets power cycle ID
+```
+
+To power off a droplet:
+
+```
+Lita: do droplets power off ID
+```
+
+To power on a droplet:
+
+```
+Lita: do droplets power on ID
+```
+
+To reboot a droplet:
+
+```
+Lita: do droplets reboot ID
+```
+
+To resize a droplet's disk:
+
+```
+Lita: do droplets resize ID SIZE_ID_OR_SLUG
+```
+
+To restore a droplet from an image:
+
+```
+Lita: do droplets restore ID IMAGE_ID
+```
+
+To show the details of a droplet:
+
+```
+Lita: do droplets show ID
+```
+
+To shut down a droplet:
+
+```
+Lita: do droplets shutdown ID
+```
+
+To take a snapshot of a droplet, optionally naming the snapshot:
+
+```
+Lita: do droplets snapshot ID [NAME]
+```
 
 ### Image commands
 

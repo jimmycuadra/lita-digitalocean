@@ -25,7 +25,28 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   it { routes_command("do domain records list example.com").to(:domain_records_list) }
   it { routes_command("do domain records show example.com 123").to(:domain_records_show) }
 
-  # Images
+  # Droplet routes
+
+  it do
+    routes_command(
+      "do droplets create example.com 512mb centos-5-8-x64 nyc1"
+    ).to(:droplets_create)
+  end
+  it { routes_command("do droplets delete 123 scrub").to(:droplets_delete) }
+  it { routes_command("do droplets list").to(:droplets_list) }
+  it { routes_command("do droplets password reset 123").to(:droplets_password_reset) }
+  it { routes_command("do droplets power cycle 123").to(:droplets_power_cycle) }
+  it { routes_command("do droplets power off 123").to(:droplets_power_off) }
+  it { routes_command("do droplets power on 123").to(:droplets_power_on) }
+  it { routes_command("do droplets reboot 123").to(:droplets_reboot) }
+  it { routes_command("do droplets rebuild 123 456").to(:droplets_rebuild) }
+  it { routes_command("do droplets resize 123 1gb").to(:droplets_resize) }
+  it { routes_command("do droplets restore 123 456").to(:droplets_restore) }
+  it { routes_command("do droplets show 123").to(:droplets_show) }
+  it { routes_command("do droplets shutdown 123").to(:droplets_shutdown) }
+  it { routes_command("do droplets snapshot 123 'My Snapshot'").to(:droplets_snapshot) }
+
+  # Image routes
 
   it { routes_command("do images delete 123").to(:images_delete) }
   it { routes_command("do images list").to(:images_list) }

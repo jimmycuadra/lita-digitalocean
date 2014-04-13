@@ -32,6 +32,37 @@ en:
             list_value: Lists all DNS records for domain DOMAIN_NAME_OR_ID.
             show_key: do domain records show DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
             show_value: Shows DNS record DOMAIN_RECORD_ID for domain DOMAIN_NAME_OR_ID.
+          droplets:
+            create_key: >-
+              do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_SLUG
+              [ssh_key_ids=SSH_KEY_IDS] [private_networking] [backups_enabled]
+            create_value: >-
+              Creates a droplet. The optional ssh_key_ids field is a comma-separated list of
+              SSH key IDs.
+            delete_key: do droplets delete ID [scrub]
+            delete_value: Deletes a droplet, optionally writing zeroes to the disk first.
+            list_key: do droplets list
+            list_value: Lists all droplets.
+            password_reset_key: do droplets password reset ID
+            password_reset_value: Resets the root password for a droplet.
+            power_cycle_key: do droplets power cycle ID
+            power_cycle_value: Powers off and then powers on a droplet.
+            power_off_key: do droplets power off ID
+            power_off_value: Powers off a droplet.
+            power_on_key: do droplets power on ID
+            power_on_value: Powers on a droplet.
+            reboot_key: do droplets reboot ID
+            reboot_value: Reboots a droplet.
+            resize_key: do droplets resize ID SIZE_ID_OR_SLUG
+            resize_value: Resizes a droplet.
+            restore_key: do droplets restore ID IMAGE_ID
+            restore_value: Restores a droplet from an image.
+            show_key: do droplets show ID
+            show_value: Shows the details of a droplet.
+            shutdown_key: do droplets shutdown ID
+            shutdown_value: Shuts down a droplet.
+            snapshot_key: do droplets snapshot ID [NAME]
+            snapshot_value: Takes a snapshot of a droplet, optionally naming the snapshot.
           images:
             delete_key: do images delete ID_OR_SLUG
             delete_value: Deletes an image with the given ID or slug.
