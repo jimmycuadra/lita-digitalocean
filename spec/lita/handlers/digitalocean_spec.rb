@@ -78,6 +78,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
   let(:client) do
     instance_double(
       "::DigitalOcean::API",
+      droplets: client_droplets,
       images: client_images,
       regions: client_regions,
       ssh_keys: client_ssh_keys,
@@ -85,6 +86,7 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
     )
   end
 
+  let(:client_droplets) { instance_double("::DigitalOcean::Resource::Droplet") }
   let(:client_images) { instance_double("::DigitalOcean::Resource::Image") }
   let(:client_regions) { instance_double("::DigitalOcean::Resource::Region") }
   let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
@@ -104,6 +106,42 @@ describe Lita::Handlers::Digitalocean, lita_handler: true do
     ).and_return(true)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
+  end
+
+  describe "droplets commands" do
+    describe "#droplets_create" do
+      it "creates a new droplet using slugs" do
+        allow(client_droplets).to receive(:create).with(
+          name: "example.com",
+          size_slug: "512mb",
+          image_slug: "centos-5-8-x64",
+          region_slug: "nyc1"
+        ).and_return(status: "OK", droplet: { id: 123, name: "example.com" })
+        send_command("do droplets create example.com 512mb centos-5-8-x64 nyc1")
+        expect(replies.last).to eq("Created new droplet: 123 (example.com)")
+      end
+
+      it "creates a new droplet using IDs" do
+        allow(client_droplets).to receive(:create).with(
+          name: "example.com",
+          size_id: "1",
+          image_id: "2",
+          region_id: "3"
+        ).and_return(status: "OK", droplet: { id: 123, name: "example.com" })
+        send_command("do droplets create example.com 1 2 3")
+        expect(replies.last).to eq("Created new droplet: 123 (example.com)")
+      end
+
+      it "creates a new droplet with optional parameters" do
+        expect(client_droplets).to receive(:create).with(
+          hash_including(ssh_key_ids: "1,2,3", private_networking: true, backups_enabled: true)
+        ).and_return(status: "OK", droplet: { id: 123, name: "example.com" })
+        send_command <<-COMMAND.chomp
+do droplets create example.com 1 2 3 ssh_key_ids=1,2,3 private_networking=true \
+backups_enabled=true
+COMMAND
+      end
+    end
   end
 
   describe "images commands" do

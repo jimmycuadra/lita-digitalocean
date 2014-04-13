@@ -65,6 +65,30 @@ module Lita
             }
           end
         end
+
+        def droplets_create(response)
+          name, size, image, region, *args = response.args[2..response.args.size]
+          kwargs = extract_named_args(args, :ssh_key_ids, :private_networking, :backups_enabled)
+
+          numeric = /^\d+$/
+
+          size_key = size =~ numeric ? :size_id : :size_slug
+          image_key = image =~ numeric ? :image_id : :image_slug
+          region_key = region =~ numeric ? :region_id : :region_slug
+
+          options = {
+            name: name,
+            size_key => size,
+            image_key => image,
+            region_key => region
+          }.merge(kwargs)
+
+          do_response = do_call(response) do |client|
+            client.droplets.create(options)
+          end
+
+          response.reply(t("droplets.create.created", do_response[:droplet]))
+        end
       end
     end
   end

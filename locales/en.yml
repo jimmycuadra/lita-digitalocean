@@ -5,6 +5,9 @@ en:
         credentials_missing: >-
           client_id and api_key must be set in Lita's configuration to
           use the DigitalOcean commands.
+        droplets:
+          create:
+            created: "Created new droplet: %{id} (%{name})"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
@@ -35,11 +38,12 @@ en:
           droplets:
             create_key: >-
               do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_SLUG
-              [ssh_key_ids=SSH_KEY_IDS] [private_networking] [backups_enabled]
+              [ssh_key_ids=SSH_KEY_IDS] [private_networking=true|false]
+              [backups_enabled=true|false]
             create_value: >-
               Creates a droplet. The optional ssh_key_ids field is a comma-separated list of
               SSH key IDs.
-            delete_key: do droplets delete ID [scrub]
+            delete_key: do droplets delete ID [scrub=true|false]
             delete_value: Deletes a droplet, optionally writing zeroes to the disk first.
             list_key: do droplets list
             list_value: Lists all droplets.

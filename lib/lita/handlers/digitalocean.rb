@@ -75,7 +75,15 @@ module Lita
             normalized_key = key.downcase.to_sym
 
             if keys.include?(normalized_key)
-              hash[normalized_key] = value.gsub(/\A["']|["']\Z/, "")
+              stripped_value = value.gsub(/\A["']|["']\Z/, "")
+              hash[normalized_key] = case stripped_value
+              when "true"
+                true
+              when "false"
+                false
+              else
+                stripped_value
+              end
             end
           end
 
