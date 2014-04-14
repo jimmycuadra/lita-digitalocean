@@ -142,6 +142,25 @@ backups_enabled=true
 COMMAND
       end
     end
+
+    describe "#droplets_delete" do
+      let(:do_droplet) { { status: "OK", droplet: { id: 123 } } }
+
+      it "deletes droplets" do
+        allow(client_droplets).to receive(:delete).with("123", {}).and_return(do_droplet)
+        send_command("do droplets delete 123")
+        expect(replies.last).to eq("Deleted droplet: 123")
+      end
+
+      it "scrubs data before deleting the droplet" do
+        allow(client_droplets).to receive(:delete).with(
+          "123",
+          scrub_data: true
+        ).and_return(do_droplet)
+        send_command("do droplets delete 123 scrub=true")
+        expect(replies.last).to eq("Deleted droplet: 123")
+      end
+    end
   end
 
   describe "images commands" do

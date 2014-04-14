@@ -89,6 +89,17 @@ module Lita
 
           response.reply(t("droplets.create.created", do_response[:droplet]))
         end
+
+        def droplets_delete(response)
+          kwargs = extract_named_args(response.args, :scrub)
+          options = {}
+          options[:scrub_data] = true if kwargs[:scrub]
+          do_response = do_call(response) do |client|
+            client.droplets.delete(response.args[2], options)
+          end
+
+          response.reply(t("droplets.delete.deleted", do_response[:droplet]))
+        end
       end
     end
   end
