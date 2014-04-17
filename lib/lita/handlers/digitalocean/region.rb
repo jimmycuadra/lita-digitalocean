@@ -1,25 +1,23 @@
 module Lita
   module Handlers
     class Digitalocean < Handler
-      module Region
-        def self.included(base)
-          base.instance_eval do
-            do_route /^do\s+regions?\s+list$/i, :regions_list, {
-              t("help.regions.list_key") => t("help.regions.list_value")
-            }
-          end
+      class Region < Base
+        do_route /^do\s+regions?\s+list$/i, :regions_list, {
+          t("help.regions.list_key") => t("help.regions.list_value")
+        }
 
-          def regions_list(response)
-            do_response = do_call(response) do |client|
-              client.regions.list
-            end or return
+        def regions_list(response)
+          do_response = do_call(response) do |client|
+            client.regions.list
+          end or return
 
-            messages = do_response[:regions].map { |region|  t("regions.details", region) }
+          messages = do_response[:regions].map { |region|  t("regions.details", region) }
 
-            response.reply(*messages)
-          end
+          response.reply(*messages)
         end
       end
+
+      Lita.register_handler(Region)
     end
   end
 end

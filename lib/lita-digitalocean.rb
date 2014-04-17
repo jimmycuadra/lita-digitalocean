@@ -15,3 +15,11 @@ Lita.load_locales Dir[File.expand_path(
 )]
 
 require "lita/handlers/digitalocean"
+require "lita/handlers/digitalocean/base"
+require "lita/handlers/digitalocean/domain"
+require "lita/handlers/digitalocean/domain_record"
+require "lita/handlers/digitalocean/droplet"
+require "lita/handlers/digitalocean/image"
+require "lita/handlers/digitalocean/region"
+require "lita/handlers/digitalocean/ssh_key"
+require "lita/handlers/digitalocean/size"

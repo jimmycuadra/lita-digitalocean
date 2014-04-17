@@ -1,22 +1,18 @@
 module Lita
   module Handlers
     class Digitalocean < Handler
-      module Image
-        def self.included(base)
-          base.instance_eval do
-            do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :images_delete, {
-              t("help.images.delete_key") => t("help.images.delete_value")
-            }
+      class Image < Base
+        do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :images_delete, {
+          t("help.images.delete_key") => t("help.images.delete_value")
+        }
 
-            do_route /^do\s+images?\s+list\s*.*$/i, :images_list, {
-              t("help.images.list_key") => t("help.images.list_value")
-            }
+        do_route /^do\s+images?\s+list\s*.*$/i, :images_list, {
+          t("help.images.list_key") => t("help.images.list_value")
+        }
 
-            do_route /^do\s+images?\s+show\s([^\s]+)$/i, :images_show, {
-              t("help.images.show_key") => t("help.images.show_value")
-            }
-          end
-        end
+        do_route /^do\s+images?\s+show\s([^\s]+)$/i, :images_show, {
+          t("help.images.show_key") => t("help.images.show_value")
+        }
 
         def images_delete(response)
           image_id = response.args[2]
@@ -55,7 +51,22 @@ module Lita
 
           response.reply(t("images.details", formatted_image(do_response[:image])))
         end
+
+        private
+
+        def format_array(array)
+          %([#{array.join(",")}])
+        end
+
+        def formatted_image(image)
+          Hashie::Rash.new image.merge(
+            formatted_regions: format_array(image[:regions]),
+            formatted_region_slugs: format_array(image[:region_slugs])
+          )
+        end
       end
+
+      Lita.register_handler(Image)
     end
   end
 end
