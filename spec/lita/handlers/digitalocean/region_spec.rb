@@ -21,26 +21,24 @@ describe Lita::Handlers::Digitalocean::Region, lita_handler: true do
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end
 
-  describe "regions commands" do
-    let(:do_list) do
-      {
-        status: "OK",
-        regions: [
-          { id: 1, name: "New York 1", slug: "nyc1" },
-          { id: 2, name: "Amsterdam 1", slug: "ams1" }
-        ]
-      }
-    end
+  let(:do_list) do
+    {
+      status: "OK",
+      regions: [
+        { id: 1, name: "New York 1", slug: "nyc1" },
+        { id: 2, name: "Amsterdam 1", slug: "ams1" }
+      ]
+    }
+  end
 
-    describe "#regions_list" do
-      it "responds with a list of all regions" do
-        allow(client_regions).to receive(:list).and_return(do_list)
-        send_command("do regions list")
-        expect(replies).to eq ([
-          "ID: 1, Name: New York 1, Slug: nyc1",
-          "ID: 2, Name: Amsterdam 1, Slug: ams1"
-        ])
-      end
+  describe "#regions_list" do
+    it "responds with a list of all regions" do
+      allow(client_regions).to receive(:list).and_return(do_list)
+      send_command("do regions list")
+      expect(replies).to eq ([
+        "ID: 1, Name: New York 1, Slug: nyc1",
+        "ID: 2, Name: Amsterdam 1, Slug: ams1"
+      ])
     end
   end
 end
