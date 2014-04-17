@@ -81,7 +81,7 @@ module Lita
 
           do_response = do_call(response) do |client|
             client.droplets.create(options)
-          end
+          end or return
 
           response.reply(t("droplets.create.created", do_response[:droplet]))
         end
@@ -92,9 +92,19 @@ module Lita
           options[:scrub_data] = true if kwargs[:scrub]
           do_response = do_call(response) do |client|
             client.droplets.delete(response.args[2], options)
-          end
+          end or return
 
           response.reply(t("droplets.delete.deleted", do_response[:droplet]))
+        end
+
+        def droplets_list(response)
+          do_response = do_call(response) do |client|
+            client.droplets.list
+          end or return
+
+          messages = do_response[:droplets].map { |droplet| t("droplets.list.detail", droplet) }
+
+          response.reply(*messages)
         end
       end
 

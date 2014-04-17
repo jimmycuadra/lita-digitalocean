@@ -10,6 +10,8 @@ en:
             created: "Created new droplet: %{id} (%{name})"
           delete:
             deleted: "Deleted droplet: %{id}"
+          list:
+            detail: "ID: %{id}, Name: %{name}, IP: %{ip_address}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:

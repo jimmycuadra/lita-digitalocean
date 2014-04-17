@@ -89,4 +89,30 @@ COMMAND
       send_command("do droplets delete 123 scrub=true")
     end
   end
+
+  describe "#droplets_list" do
+    let(:do_droplets) do
+      {
+        status: "OK",
+        droplets: [{
+          id: 123,
+          name: "image1",
+          ip_address: "1.2.3.4"
+        }, {
+          id: 456,
+          name: "image2",
+          ip_address: "5.6.7.8"
+        }]
+      }
+    end
+
+    it "lists all droplets" do
+      allow(client_droplets).to receive(:list).and_return(do_droplets)
+      send_command("do droplets list")
+      expect(replies).to eq([
+        "ID: 123, Name: image1, IP: 1.2.3.4",
+        "ID: 456, Name: image2, IP: 5.6.7.8"
+      ])
+    end
+  end
 end
