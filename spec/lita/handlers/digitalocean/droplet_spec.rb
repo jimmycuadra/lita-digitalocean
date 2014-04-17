@@ -6,7 +6,8 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
       "do droplets create example.com 512mb centos-5-8-x64 nyc1"
     ).to(:droplets_create)
   end
-  it { routes_command("do droplets delete 123 scrub").to(:droplets_delete) }
+  it { routes_command("do droplets delete 123").to(:droplets_delete) }
+  it { routes_command("do droplets delete 123 scrub=true").to(:droplets_delete) }
   it { routes_command("do droplets list").to(:droplets_list) }
   it { routes_command("do droplets password reset 123").to(:droplets_password_reset) }
   it { routes_command("do droplets power cycle 123").to(:droplets_power_cycle) }
@@ -69,6 +70,23 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
 do droplets create example.com 1 2 3 ssh_key_ids=1,2,3 private_networking=true \
 backups_enabled=true
 COMMAND
+    end
+  end
+
+  describe "#droplets_delete" do
+    it "deletes a droplet" do
+      allow(client_droplets).to receive(:delete).with("123", {}).and_return(
+        status: "OK", droplet: { id: 123 }
+      )
+      send_command("do droplets delete 123")
+      expect(replies.last).to eq("Deleted droplet: 123")
+    end
+
+    it "scrubs the disk before deleting the droplet" do
+      allow(client_droplets).to receive(:delete).with("123", { scrub_data: true }).and_return(
+        status: "OK", droplet: { id: 123 }
+      )
+      send_command("do droplets delete 123 scrub=true")
     end
   end
 end
