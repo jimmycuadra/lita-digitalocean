@@ -145,4 +145,14 @@ COMMAND
       expect(replies.last).to eq("Powered off droplet: 123")
     end
   end
+
+  describe "#power_on" do
+    it "powers on the droplet" do
+      allow(client_droplets).to receive(:power_on).with("123").and_return(
+        status: "OK", droplet: { id: 123 }
+      )
+      send_command("do droplets power on 123")
+      expect(replies.last).to eq("Powered on droplet: 123")
+    end
+  end
 end

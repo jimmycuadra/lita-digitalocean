@@ -18,6 +18,8 @@ en:
             cycled: "Power cycled for droplet: %{id}"
           power_off:
             powered_off: "Powered off droplet: %{id}"
+          power_on:
+            powered_on: "Powered on droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
