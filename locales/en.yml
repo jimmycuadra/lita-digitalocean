@@ -22,6 +22,8 @@ en:
             powered_on: "Powered on droplet: %{id}"
           reboot:
             rebooted: "Rebooted droplet: %{id}"
+          rebuild:
+            rebuilt: "Rebuilt droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:

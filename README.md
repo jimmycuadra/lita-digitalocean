@@ -142,6 +142,12 @@ To reboot a droplet:
 Lita: do droplets reboot ID
 ```
 
+To rebuild a droplet:
+
+```
+Lita: do droplets rebuild ID IMAGE_ID
+```
+
 To resize a droplet's disk:
 
 ```

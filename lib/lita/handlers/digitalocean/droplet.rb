@@ -148,6 +148,15 @@ module Lita
 
           response.reply(t("droplets.reboot.rebooted", id: id))
         end
+
+        def rebuild(response)
+          id, image_id = response.args[2..3]
+          do_response = do_call(response) do |client|
+            client.droplets.rebuild(id, image_id: image_id)
+          end or return
+
+          response.reply(t("droplets.rebuild.rebuilt", id: id))
+        end
       end
 
       Lita.register_handler(Droplet)

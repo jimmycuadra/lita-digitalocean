@@ -156,4 +156,12 @@ COMMAND
       expect(replies.last).to eq("Rebooted droplet: 123")
     end
   end
+
+  describe "#rebuild" do
+    it "rebuilds the droplet with the provided image" do
+      allow(client_droplets).to receive(:rebuild).with("123", image_id: "456").and_return(do_ok)
+      send_command("do droplets rebuild 123 456")
+      expect(replies.last).to eq("Rebuilt droplet: 123")
+    end
+  end
 end
