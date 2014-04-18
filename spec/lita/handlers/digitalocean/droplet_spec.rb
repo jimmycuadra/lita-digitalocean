@@ -178,4 +178,12 @@ COMMAND
       expect(replies.last).to eq("Resized droplet: 123")
     end
   end
+
+  describe "#restore" do
+    it "restores the droplet to the provided image" do
+      allow(client_droplets).to receive(:restore).with("123", image_id: "456").and_return(do_ok)
+      send_command("do droplets restore 123 456")
+      expect(replies.last).to eq("Restored droplet: 123")
+    end
+  end
 end

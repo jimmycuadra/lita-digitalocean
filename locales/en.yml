@@ -26,6 +26,8 @@ en:
             rebuilt: "Rebuilt droplet: %{id}"
           resize:
             resized: "Resized droplet: %{id}"
+          restore:
+            restored: "Restored droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:

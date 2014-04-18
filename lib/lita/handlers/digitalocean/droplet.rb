@@ -175,6 +175,16 @@ module Lita
 
           response.reply(t("droplets.resize.resized", id: id))
         end
+
+        def restore(response)
+          id, image_id = response.args[2..3]
+
+          do_response = do_call(response) do |client|
+            client.droplets.restore(id, image_id: image_id)
+          end or return
+
+          response.reply(t("droplets.restore.restored", id: id))
+        end
       end
 
       Lita.register_handler(Droplet)
