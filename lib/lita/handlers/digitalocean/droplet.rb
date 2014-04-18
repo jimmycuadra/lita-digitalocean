@@ -2,13 +2,9 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Droplet < Base
-        do_route(
-          /^do\s+droplets?\s+create(?:\s+[^\s]+){4}/i,
-          :create,
-          {
-            t("help.droplets.create_key") => t("help.droplets.create_value")
-          }
-        )
+        do_route /^do\s+droplets?\s+create(?:\s+[^\s]+){4}/i, :create, {
+          t("help.droplets.create_key") => t("help.droplets.create_value")
+        }
 
         do_route /^do\s+droplets?\s+delete\s+\d+/i, :delete, {
           t("help.droplets.delete_key") => t("help.droplets.delete_value")

@@ -1,10 +1,10 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Image, lita_handler: true do
-  it { routes_command("do images delete 123").to(:images_delete) }
-  it { routes_command("do images list").to(:images_list) }
-  it { routes_command("do images list filter").to(:images_list) }
-  it { routes_command("do images show 123").to(:images_show) }
+  it { routes_command("do images delete 123").to(:delete) }
+  it { routes_command("do images list").to(:list) }
+  it { routes_command("do images list filter").to(:list) }
+  it { routes_command("do images show 123").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", images: client_images) }
   let(:client_images) { instance_double("::DigitalOcean::Resource::Image") }
@@ -45,7 +45,7 @@ IMAGE
 
     let(:do_delete) { { status: "OK" } }
 
-  describe "#images_delete" do
+  describe "#delete" do
     it "responds with a success message" do
       allow(client_images).to receive(:delete).with("123").and_return(do_delete)
       send_command("do images delete 123")
@@ -53,7 +53,7 @@ IMAGE
     end
   end
 
-  describe "#images_list" do
+  describe "#list" do
     let(:private_image) do
       {
         "id" => 1602,
@@ -109,7 +109,7 @@ IMAGE
     end
   end
 
-  describe "#images_show" do
+  describe "#show" do
     it "responds with the details of the image" do
       allow(client_images).to receive(:show).with("123").and_return(
         { status: "OK", image: public_image }

@@ -1,10 +1,10 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Domain, lita_handler: true do
-  it { routes_command("do domains create example.com 10.10.10.10").to(:domains_create) }
-  it { routes_command("do domains delete example.com").to(:domains_delete) }
-  it { routes_command("do domains list").to(:domains_list) }
-  it { routes_command("do domains show example.com").to(:domains_show) }
+  it { routes_command("do domains create example.com 10.10.10.10").to(:create) }
+  it { routes_command("do domains delete example.com").to(:delete) }
+  it { routes_command("do domains list").to(:list) }
+  it { routes_command("do domains show example.com").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", domains: client_domains) }
   let(:client_domains) { instance_double("::DigitalOcean::Resource::Domain") }

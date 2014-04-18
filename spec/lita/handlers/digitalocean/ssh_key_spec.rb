@@ -1,15 +1,15 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
-  it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:ssh_keys_add) }
-  it { routes_command("do ssh keys delete 123").to(:ssh_keys_delete) }
+  it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:add) }
+  it { routes_command("do ssh keys delete 123").to(:delete) }
   it do
     routes_command(
       "do ssh keys edit 123 name=foo public_key='ssh-rsa changed'"
-    ).to(:ssh_keys_edit)
+    ).to(:edit)
   end
-  it { routes_command("do ssh keys list").to(:ssh_keys_list) }
-  it { routes_command("do ssh keys show 123").to(:ssh_keys_show) }
+  it { routes_command("do ssh keys list").to(:list) }
+  it { routes_command("do ssh keys show 123").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", ssh_keys: client_ssh_keys) }
   let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
@@ -57,7 +57,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
     }
   end
 
-  describe "#ssh_keys_add" do
+  describe "#add" do
     it "responds with the details of the new key" do
       allow(client_ssh_keys).to receive(:add).with(
         name: "My Key",
@@ -73,7 +73,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
     end
   end
 
-  describe "#ssh_keys_delete" do
+  describe "#delete" do
     let(:do_delete) { { status: "OK" } }
 
     it "responds with a success message" do
@@ -83,7 +83,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
     end
   end
 
-  describe "#ssh_keys_edit" do
+  describe "#edit" do
     it "responds with the edited key's values" do
       allow(client_ssh_keys).to receive(:edit).with(
         "123",
@@ -95,7 +95,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
     end
   end
 
-  describe "#ssh_keys_list" do
+  describe "#list" do
     it "returns a list of key IDs and names" do
       allow(client_ssh_keys).to receive(:list).and_return(do_list)
       send_command("do ssh keys list")
@@ -109,7 +109,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
     end
   end
 
-  describe "#ssh_keys_show" do
+  describe "#show" do
     it "responds with the public key" do
       allow(client_ssh_keys).to receive(:show).with("123").and_return(do_key)
       send_command("do ssh keys show 123")

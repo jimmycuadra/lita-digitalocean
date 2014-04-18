@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Size, lita_handler: true do
-  it { routes_command("do sizes list").to(:sizes_list) }
+  it { routes_command("do sizes list").to(:list) }
 
   let(:client) { instance_double( "::DigitalOcean::API", sizes: client_sizes) }
   let(:client_sizes) { instance_double("::DigitalOcean::Resource::Size") }
@@ -31,7 +31,7 @@ describe Lita::Handlers::Digitalocean::Size, lita_handler: true do
     }
   end
 
-  describe "#sizes_list" do
+  describe "#list" do
     it "responds with a list of all sizes" do
       allow(client_sizes).to receive(:list).and_return(do_sizes)
       send_command("do sizes list")

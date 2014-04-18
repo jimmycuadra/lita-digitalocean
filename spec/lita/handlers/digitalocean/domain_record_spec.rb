@@ -4,16 +4,16 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
   it do
     routes_command(
       "do domain records create example.com txt 'some value' name=example.com"
-    ).to(:domain_records_create)
+    ).to(:create)
   end
-  it { routes_command("do domain records delete example.com 123").to(:domain_records_delete) }
+  it { routes_command("do domain records delete example.com 123").to(:delete) }
   it do
     routes_command(
       "do domain records edit example.com 123 txt 'some value' name=example.com"
-    ).to(:domain_records_edit)
+    ).to(:edit)
   end
-  it { routes_command("do domain records list example.com").to(:domain_records_list) }
-  it { routes_command("do domain records show example.com 123").to(:domain_records_show) }
+  it { routes_command("do domain records list example.com").to(:list) }
+  it { routes_command("do domain records show example.com 123").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", domains: client_domains) }
   let(:client_domains) { instance_double("::DigitalOcean::Resource::Domain") }

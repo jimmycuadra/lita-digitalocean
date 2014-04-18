@@ -2,27 +2,27 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class SSHKey < Base
-        do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :ssh_keys_add, {
+        do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :add, {
           t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
         }
 
-        do_route /^do\s+ssh\s+keys?\s+delete\s+(\d+)$/i, :ssh_keys_delete, {
+        do_route /^do\s+ssh\s+keys?\s+delete\s+(\d+)$/i, :delete, {
           t("help.ssh_keys.delete_key") => t("help.ssh_keys.delete_value")
         }
 
-        do_route /^do\s+ssh\s+keys?\s+edit\s+(\d+)\s+.+$/i, :ssh_keys_edit, {
+        do_route /^do\s+ssh\s+keys?\s+edit\s+(\d+)\s+.+$/i, :edit, {
           t("help.ssh_keys.edit_key") => t("help.ssh_keys.edit_value")
         }
 
-        do_route /^do\s+ssh\s+keys?\s+list$/i, :ssh_keys_list, {
+        do_route /^do\s+ssh\s+keys?\s+list$/i, :list, {
           t("help.ssh_keys.list_key") => t("help.ssh_keys.list_value")
         }
 
-        do_route /^do\s+ssh\s+keys?\s+show\s+(\d+)$/i, :ssh_keys_show, {
+        do_route /^do\s+ssh\s+keys?\s+show\s+(\d+)$/i, :show, {
           t("help.ssh_keys.show_key") => t("help.ssh_keys.show_value"),
         }
 
-        def ssh_keys_add(response)
+        def add(response)
           name, public_key = response.args[3..4]
 
           unless name && public_key
@@ -36,7 +36,7 @@ module Lita
           response.reply(t("ssh_keys.add.created", do_response[:ssh_key]))
         end
 
-        def ssh_keys_delete(response)
+        def delete(response)
           key_id = response.matches[0][0]
 
           do_call(response) do |client|
@@ -46,7 +46,7 @@ module Lita
           response.reply(t("ssh_keys.delete.deleted", key_id: key_id))
         end
 
-        def ssh_keys_edit(response)
+        def edit(response)
           args = extract_named_args(response.args, :name, :public_key)
 
           if args[:public_key]
@@ -60,7 +60,7 @@ module Lita
           response.reply(t("ssh_keys.edit.updated", do_response[:ssh_key]))
         end
 
-        def ssh_keys_list(response)
+        def list(response)
           do_response = do_call(response) do |client|
             client.ssh_keys.list
           end or return
@@ -74,7 +74,7 @@ module Lita
           end
         end
 
-        def ssh_keys_show(response)
+        def show(response)
           do_response = do_call(response) do |client|
             client.ssh_keys.show(response.matches[0][0])
           end or return

@@ -2,19 +2,19 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Image < Base
-        do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :images_delete, {
+        do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :delete, {
           t("help.images.delete_key") => t("help.images.delete_value")
         }
 
-        do_route /^do\s+images?\s+list\s*.*$/i, :images_list, {
+        do_route /^do\s+images?\s+list\s*.*$/i, :list, {
           t("help.images.list_key") => t("help.images.list_value")
         }
 
-        do_route /^do\s+images?\s+show\s([^\s]+)$/i, :images_show, {
+        do_route /^do\s+images?\s+show\s([^\s]+)$/i, :show, {
           t("help.images.show_key") => t("help.images.show_value")
         }
 
-        def images_delete(response)
+        def delete(response)
           image_id = response.args[2]
 
           do_response = do_call(response) do |client|
@@ -24,7 +24,7 @@ module Lita
           response.reply(t("images.delete.deleted", image_id: image_id))
         end
 
-        def images_list(response)
+        def list(response)
           filter = response.args[2]
           normalized_filter = filter.to_s.downcase
           options = {}
@@ -42,7 +42,7 @@ module Lita
           response.reply(*messages)
         end
 
-        def images_show(response)
+        def show(response)
           image_id = response.args[2]
 
           do_response = do_call(response) do |client|

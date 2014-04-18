@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Region, lita_handler: true do
-  it { routes_command("do regions list").to(:regions_list) }
+  it { routes_command("do regions list").to(:list) }
 
   let(:client) { instance_double("::DigitalOcean::API", regions: client_regions) }
   let(:client_regions) { instance_double("::DigitalOcean::Resource::Region") }
@@ -31,7 +31,7 @@ describe Lita::Handlers::Digitalocean::Region, lita_handler: true do
     }
   end
 
-  describe "#regions_list" do
+  describe "#list" do
     it "responds with a list of all regions" do
       allow(client_regions).to receive(:list).and_return(do_list)
       send_command("do regions list")
