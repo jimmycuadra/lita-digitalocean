@@ -134,6 +134,14 @@ module Lita
 
           response.reply(t("droplets.power_on.powered_on", do_response[:droplet]))
         end
+
+        def reboot(response)
+          do_response = do_call(response) do |client|
+            client.droplets.reboot(response.args[2])
+          end or return
+
+          response.reply(t("droplets.reboot.rebooted", do_response[:droplet]))
+        end
       end
 
       Lita.register_handler(Droplet)

@@ -155,4 +155,14 @@ COMMAND
       expect(replies.last).to eq("Powered on droplet: 123")
     end
   end
+
+  describe "#reboot" do
+    it "reboots the droplet" do
+      allow(client_droplets).to receive(:reboot).with("123").and_return(
+        status: "OK", droplet: { id: 123 }
+      )
+      send_command("do droplets reboot 123")
+      expect(replies.last).to eq("Rebooted droplet: 123")
+    end
+  end
 end
