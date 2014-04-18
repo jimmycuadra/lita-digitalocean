@@ -12,6 +12,8 @@ en:
             deleted: "Deleted droplet: %{id}"
           list:
             detail: "ID: %{id}, Name: %{name}, IP: %{ip_address}"
+          password_reset:
+            reset: "Password reset for droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:

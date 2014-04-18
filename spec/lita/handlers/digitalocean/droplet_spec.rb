@@ -4,22 +4,22 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
   it do
     routes_command(
       "do droplets create example.com 512mb centos-5-8-x64 nyc1"
-    ).to(:droplets_create)
+    ).to(:create)
   end
-  it { routes_command("do droplets delete 123").to(:droplets_delete) }
-  it { routes_command("do droplets delete 123 scrub=true").to(:droplets_delete) }
-  it { routes_command("do droplets list").to(:droplets_list) }
-  it { routes_command("do droplets password reset 123").to(:droplets_password_reset) }
-  it { routes_command("do droplets power cycle 123").to(:droplets_power_cycle) }
-  it { routes_command("do droplets power off 123").to(:droplets_power_off) }
-  it { routes_command("do droplets power on 123").to(:droplets_power_on) }
-  it { routes_command("do droplets reboot 123").to(:droplets_reboot) }
-  it { routes_command("do droplets rebuild 123 456").to(:droplets_rebuild) }
-  it { routes_command("do droplets resize 123 1gb").to(:droplets_resize) }
-  it { routes_command("do droplets restore 123 456").to(:droplets_restore) }
-  it { routes_command("do droplets show 123").to(:droplets_show) }
-  it { routes_command("do droplets shutdown 123").to(:droplets_shutdown) }
-  it { routes_command("do droplets snapshot 123 'My Snapshot'").to(:droplets_snapshot) }
+  it { routes_command("do droplets delete 123").to(:delete) }
+  it { routes_command("do droplets delete 123 scrub=true").to(:delete) }
+  it { routes_command("do droplets list").to(:list) }
+  it { routes_command("do droplets password reset 123").to(:password_reset) }
+  it { routes_command("do droplets power cycle 123").to(:power_cycle) }
+  it { routes_command("do droplets power off 123").to(:power_off) }
+  it { routes_command("do droplets power on 123").to(:power_on) }
+  it { routes_command("do droplets reboot 123").to(:reboot) }
+  it { routes_command("do droplets rebuild 123 456").to(:rebuild) }
+  it { routes_command("do droplets resize 123 1gb").to(:resize) }
+  it { routes_command("do droplets restore 123 456").to(:restore) }
+  it { routes_command("do droplets show 123").to(:show) }
+  it { routes_command("do droplets shutdown 123").to(:shutdown) }
+  it { routes_command("do droplets snapshot 123 'My Snapshot'").to(:snapshot) }
 
   let(:client) { instance_double("::DigitalOcean::API", droplets: client_droplets) }
   let(:client_droplets) { instance_double("::DigitalOcean::Resource::Droplet") }
@@ -39,7 +39,7 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end
 
-  describe "#droplets_create" do
+  describe "#create" do
     it "creates a new droplet using slugs" do
       allow(client_droplets).to receive(:create).with(
         name: "example.com",
@@ -73,7 +73,7 @@ COMMAND
     end
   end
 
-  describe "#droplets_delete" do
+  describe "#delete" do
     it "deletes a droplet" do
       allow(client_droplets).to receive(:delete).with("123", {}).and_return(
         status: "OK", droplet: { id: 123 }
@@ -90,7 +90,7 @@ COMMAND
     end
   end
 
-  describe "#droplets_list" do
+  describe "#list" do
     let(:do_droplets) do
       {
         status: "OK",
@@ -113,6 +113,16 @@ COMMAND
         "ID: 123, Name: image1, IP: 1.2.3.4",
         "ID: 456, Name: image2, IP: 5.6.7.8"
       ])
+    end
+  end
+
+  describe "#password_reset" do
+    it "resets the root password" do
+      allow(client_droplets).to receive(:password_reset).with("123").and_return(
+        status: "OK", droplet: { id: 123 }
+      )
+      send_command("do droplets password reset 123")
+      expect(replies.last).to eq("Password reset for droplet: 123")
     end
   end
 end
