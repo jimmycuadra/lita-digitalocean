@@ -14,6 +14,8 @@ en:
             detail: "ID: %{id}, Name: %{name}, IP: %{ip_address}"
           password_reset:
             reset: "Password reset for droplet: %{id}"
+          power_cycle:
+            cycled: "Power cycled for droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:

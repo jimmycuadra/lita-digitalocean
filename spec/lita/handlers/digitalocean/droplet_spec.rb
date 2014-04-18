@@ -125,4 +125,14 @@ COMMAND
       expect(replies.last).to eq("Password reset for droplet: 123")
     end
   end
+
+  describe "#power_cycle" do
+    it "cycles the droplet's power" do
+      allow(client_droplets).to receive(:power_cycle).with("123").and_return(
+        status: "OK", droplet: { id: 123 }
+      )
+      send_command("do droplets power cycle 123")
+      expect(replies.last).to eq("Power cycled for droplet: 123")
+    end
+  end
 end

@@ -110,6 +110,14 @@ module Lita
 
           response.reply(t("droplets.password_reset.reset", do_response[:droplet]))
         end
+
+        def power_cycle(response)
+          do_response = do_call(response) do |client|
+            client.droplets.power_cycle(response.args[3])
+          end or return
+
+          response.reply(t("droplets.power_cycle.cycled", do_response[:droplet]))
+        end
       end
 
       Lita.register_handler(Droplet)
