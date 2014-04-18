@@ -164,4 +164,18 @@ COMMAND
       expect(replies.last).to eq("Rebuilt droplet: 123")
     end
   end
+
+  describe "#resize" do
+    it "resizes the droplet with the provided size ID" do
+      allow(client_droplets).to receive(:resize).with("123", size_id: "456").and_return(do_ok)
+      send_command("do droplets resize 123 456")
+      expect(replies.last).to eq("Resized droplet: 123")
+    end
+
+    it "resizes the droplet with the provided size slug" do
+      allow(client_droplets).to receive(:resize).with("123", size_slug: "1gb").and_return(do_ok)
+      send_command("do droplets resize 123 1gb")
+      expect(replies.last).to eq("Resized droplet: 123")
+    end
+  end
 end

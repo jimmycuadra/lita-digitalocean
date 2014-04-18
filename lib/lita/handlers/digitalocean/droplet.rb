@@ -87,6 +87,7 @@ module Lita
           id = response.args[2]
           options = {}
           options[:scrub_data] = true if kwargs[:scrub]
+
           do_response = do_call(response) do |client|
             client.droplets.delete(id, options)
           end or return
@@ -106,6 +107,7 @@ module Lita
 
         def password_reset(response)
           id = response.args[3]
+
           do_response = do_call(response) do |client|
             client.droplets.password_reset(id)
           end or return
@@ -115,6 +117,7 @@ module Lita
 
         def power_cycle(response)
           id = response.args[3]
+
           do_response = do_call(response) do |client|
             client.droplets.power_cycle(response.args[3])
           end or return
@@ -124,6 +127,7 @@ module Lita
 
         def power_off(response)
           id = response.args[3]
+
           do_response = do_call(response) do |client|
             client.droplets.power_off(response.args[3])
           end or return
@@ -133,6 +137,7 @@ module Lita
 
         def power_on(response)
           id = response.args[3]
+
           do_response = do_call(response) do |client|
             client.droplets.power_on(response.args[3])
           end or return
@@ -142,6 +147,7 @@ module Lita
 
         def reboot(response)
           id = response.args[2]
+
           do_response = do_call(response) do |client|
             client.droplets.reboot(response.args[2])
           end or return
@@ -151,11 +157,23 @@ module Lita
 
         def rebuild(response)
           id, image_id = response.args[2..3]
+
           do_response = do_call(response) do |client|
             client.droplets.rebuild(id, image_id: image_id)
           end or return
 
           response.reply(t("droplets.rebuild.rebuilt", id: id))
+        end
+
+        def resize(response)
+          id, size = response.args[2..3]
+          size_key = size =~ /^\d+$/ ? :size_id : :size_slug
+
+          do_response = do_call(response) do |client|
+            client.droplets.resize(id, size_key => size)
+          end or return
+
+          response.reply(t("droplets.resize.resized", id: id))
         end
       end
 
