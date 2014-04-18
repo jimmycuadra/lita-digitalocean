@@ -84,13 +84,14 @@ module Lita
 
         def delete(response)
           kwargs = extract_named_args(response.args, :scrub)
+          id = response.args[2]
           options = {}
           options[:scrub_data] = true if kwargs[:scrub]
           do_response = do_call(response) do |client|
-            client.droplets.delete(response.args[2], options)
+            client.droplets.delete(id, options)
           end or return
 
-          response.reply(t("droplets.delete.deleted", do_response[:droplet]))
+          response.reply(t("droplets.delete.deleted", id: id))
         end
 
         def list(response)
@@ -104,43 +105,48 @@ module Lita
         end
 
         def password_reset(response)
+          id = response.args[3]
           do_response = do_call(response) do |client|
-            client.droplets.password_reset(response.args[3])
+            client.droplets.password_reset(id)
           end or return
 
-          response.reply(t("droplets.password_reset.reset", do_response[:droplet]))
+          response.reply(t("droplets.password_reset.reset", id: id))
         end
 
         def power_cycle(response)
+          id = response.args[3]
           do_response = do_call(response) do |client|
             client.droplets.power_cycle(response.args[3])
           end or return
 
-          response.reply(t("droplets.power_cycle.cycled", do_response[:droplet]))
+          response.reply(t("droplets.power_cycle.cycled", id: id))
         end
 
         def power_off(response)
+          id = response.args[3]
           do_response = do_call(response) do |client|
             client.droplets.power_off(response.args[3])
           end or return
 
-          response.reply(t("droplets.power_off.powered_off", do_response[:droplet]))
+          response.reply(t("droplets.power_off.powered_off", id: id))
         end
 
         def power_on(response)
+          id = response.args[3]
           do_response = do_call(response) do |client|
             client.droplets.power_on(response.args[3])
           end or return
 
-          response.reply(t("droplets.power_on.powered_on", do_response[:droplet]))
+          response.reply(t("droplets.power_on.powered_on", id: id))
         end
 
         def reboot(response)
+          id = response.args[2]
           do_response = do_call(response) do |client|
             client.droplets.reboot(response.args[2])
           end or return
 
-          response.reply(t("droplets.reboot.rebooted", do_response[:droplet]))
+          response.reply(t("droplets.reboot.rebooted", id: id))
         end
       end
 

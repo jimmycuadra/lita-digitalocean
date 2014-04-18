@@ -24,6 +24,8 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
   let(:client) { instance_double("::DigitalOcean::API", droplets: client_droplets) }
   let(:client_droplets) { instance_double("::DigitalOcean::Resource::Droplet") }
 
+  let(:do_ok) { { status: "OK" } }
+
   before do
     Lita.config.handlers.digitalocean = Lita::Config.new
     Lita.config.handlers.digitalocean.tap do |config|
@@ -75,17 +77,16 @@ COMMAND
 
   describe "#delete" do
     it "deletes a droplet" do
-      allow(client_droplets).to receive(:delete).with("123", {}).and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:delete).with("123", {}).and_return(do_ok)
       send_command("do droplets delete 123")
       expect(replies.last).to eq("Deleted droplet: 123")
     end
 
     it "scrubs the disk before deleting the droplet" do
-      allow(client_droplets).to receive(:delete).with("123", { scrub_data: true }).and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:delete).with(
+        "123", {
+          scrub_data: true
+        }).and_return(do_ok)
       send_command("do droplets delete 123 scrub=true")
     end
   end
@@ -118,9 +119,7 @@ COMMAND
 
   describe "#password_reset" do
     it "resets the root password" do
-      allow(client_droplets).to receive(:password_reset).with("123").and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:password_reset).with("123").and_return(do_ok)
       send_command("do droplets password reset 123")
       expect(replies.last).to eq("Password reset for droplet: 123")
     end
@@ -128,9 +127,7 @@ COMMAND
 
   describe "#power_cycle" do
     it "cycles the droplet's power" do
-      allow(client_droplets).to receive(:power_cycle).with("123").and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:power_cycle).with("123").and_return(do_ok)
       send_command("do droplets power cycle 123")
       expect(replies.last).to eq("Power cycled for droplet: 123")
     end
@@ -138,9 +135,7 @@ COMMAND
 
   describe "#power_off" do
     it "powers off the droplet" do
-      allow(client_droplets).to receive(:power_off).with("123").and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:power_off).with("123").and_return(do_ok)
       send_command("do droplets power off 123")
       expect(replies.last).to eq("Powered off droplet: 123")
     end
@@ -148,9 +143,7 @@ COMMAND
 
   describe "#power_on" do
     it "powers on the droplet" do
-      allow(client_droplets).to receive(:power_on).with("123").and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:power_on).with("123").and_return(do_ok)
       send_command("do droplets power on 123")
       expect(replies.last).to eq("Powered on droplet: 123")
     end
@@ -158,9 +151,7 @@ COMMAND
 
   describe "#reboot" do
     it "reboots the droplet" do
-      allow(client_droplets).to receive(:reboot).with("123").and_return(
-        status: "OK", droplet: { id: 123 }
-      )
+      allow(client_droplets).to receive(:reboot).with("123").and_return(do_ok)
       send_command("do droplets reboot 123")
       expect(replies.last).to eq("Rebooted droplet: 123")
     end
