@@ -204,6 +204,18 @@ module Lita
           response.reply(t("droplets.shutdown.shut_down", id: id))
         end
 
+        def snapshot(response)
+          id, name = response.args[2..3]
+          options = {}
+          options[:name] = name if name
+
+          do_response = do_call(response) do |client|
+            client.droplets.snapshot(id, options)
+          end or return
+
+          response.reply(t("droplets.snapshot.snapshotted", id: id))
+        end
+
         private
 
         def formatted_droplet(droplet)

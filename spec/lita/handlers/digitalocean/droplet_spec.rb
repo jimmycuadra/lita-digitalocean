@@ -222,4 +222,18 @@ DROPLET
       expect(replies.last).to eq("Shut down droplet: 123")
     end
   end
+
+  describe "#snapshot" do
+    it "takes a snapshot of the droplet" do
+      allow(client_droplets).to receive(:snapshot).with("123", {}).and_return(do_ok)
+      send_command("do droplets snapshot 123")
+      expect(replies.last).to eq("Snapshotted droplet: 123")
+    end
+
+    it "takes a named snapshot of the droplet" do
+      allow(client_droplets).to receive(:snapshot).with("123", name: "My Droplet").and_return(do_ok)
+      send_command("do droplets snapshot 123 'My Droplet'")
+      expect(replies.last).to eq("Snapshotted droplet: 123")
+    end
+  end
 end

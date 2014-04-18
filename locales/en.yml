@@ -36,6 +36,8 @@ en:
               %{private_ip_address}, Locked: %{locked}, Status: %{status}
           shutdown:
             shut_down: "Shut down droplet: %{id}"
+          snapshot:
+            snapshotted: "Snapshotted droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
