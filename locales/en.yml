@@ -16,6 +16,8 @@ en:
             reset: "Password reset for droplet: %{id}"
           power_cycle:
             cycled: "Power cycled for droplet: %{id}"
+          power_off:
+            powered_off: "Powered off droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
