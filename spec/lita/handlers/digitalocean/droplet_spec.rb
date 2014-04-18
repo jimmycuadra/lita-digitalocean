@@ -186,4 +186,12 @@ COMMAND
       expect(replies.last).to eq("Restored droplet: 123")
     end
   end
+
+  describe "#shutdown" do
+    it "shuts down the droplet" do
+      allow(client_droplets).to receive(:shutdown).with("123").and_return(do_ok)
+      send_command("do droplets shutdown 123")
+      expect(replies.last).to eq("Shut down droplet: 123")
+    end
+  end
 end

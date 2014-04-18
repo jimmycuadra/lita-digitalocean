@@ -50,7 +50,7 @@ module Lita
           t("help.droplets.show_key") => t("help.droplets.show_value")
         }
 
-        do_route /^do\s+droplets?\s+shut\s*down\s+\d+$/i, :shutdown, {
+        do_route /^do\s+droplets?\s+shut\s*down\s+(\d+)$/i, :shutdown, {
           t("help.droplets.shutdown_key") => t("help.droplets.shutdown_value")
         }
 
@@ -184,6 +184,16 @@ module Lita
           end or return
 
           response.reply(t("droplets.restore.restored", id: id))
+        end
+
+        def shutdown(response)
+          id = response.matches[0][0]
+
+          do_response = do_call(response) do |client|
+            client.droplets.shutdown(id)
+          end or return
+
+          response.reply(t("droplets.shutdown.shut_down", id: id))
         end
       end
 

@@ -28,6 +28,8 @@ en:
             resized: "Resized droplet: %{id}"
           restore:
             restored: "Restored droplet: %{id}"
+          shutdown:
+            shut_down: "Shut down droplet: %{id}"
         error: "DigitalOcean API error: %{message}"
         format: Format
         help:
