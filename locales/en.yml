@@ -28,6 +28,12 @@ en:
             resized: "Resized droplet: %{id}"
           restore:
             restored: "Restored droplet: %{id}"
+          show:
+            details: >-
+              ID: %{id}, Image ID: %{image_id}, Name: %{name}, Region ID: %{region_id}, Size ID:
+              %{size_id}, Backups active: %{backups_active}, Backups: %{formatted_backups},
+              Snapshots: %{formatted_snapshots}, IP address: %{ip_address}, Private IP address:
+              %{private_ip_address}, Locked: %{locked}, Status: %{status}
           shutdown:
             shut_down: "Shut down droplet: %{id}"
         error: "DigitalOcean API error: %{message}"

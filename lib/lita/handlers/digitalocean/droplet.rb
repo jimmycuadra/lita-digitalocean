@@ -186,6 +186,14 @@ module Lita
           response.reply(t("droplets.restore.restored", id: id))
         end
 
+        def show(response)
+          do_response = do_call(response) do |client|
+            client.droplets.show(response.args[2])
+          end or return
+
+          response.reply(t("droplets.show.details", formatted_droplet(do_response[:droplet])))
+        end
+
         def shutdown(response)
           id = response.matches[0][0]
 
@@ -194,6 +202,15 @@ module Lita
           end or return
 
           response.reply(t("droplets.shutdown.shut_down", id: id))
+        end
+
+        private
+
+        def formatted_droplet(droplet)
+          Hashie::Rash.new droplet.merge(
+            formatted_backups: format_array(droplet[:backups]),
+            formatted_snapshots: format_array(droplet[:snapshots])
+          )
         end
       end
 

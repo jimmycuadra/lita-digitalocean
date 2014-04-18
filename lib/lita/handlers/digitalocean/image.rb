@@ -54,10 +54,6 @@ module Lita
 
         private
 
-        def format_array(array)
-          %([#{array.join(",")}])
-        end
-
         def formatted_image(image)
           Hashie::Rash.new image.merge(
             formatted_regions: format_array(image[:regions]),

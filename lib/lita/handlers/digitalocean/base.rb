@@ -71,6 +71,11 @@ module Lita
             hash
           end
         end
+
+        def format_array(array)
+          %([#{array.join(",")}])
+        end
+
       end
     end
   end

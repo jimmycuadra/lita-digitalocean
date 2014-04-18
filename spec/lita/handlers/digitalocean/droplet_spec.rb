@@ -187,6 +187,34 @@ COMMAND
     end
   end
 
+  describe "#show" do
+    it "responds with the details of the droplet" do
+      allow(client_droplets).to receive(:show).with("123").and_return(
+        status: "OK",
+        droplet: {
+          id: 123,
+          image_id: 456,
+          name: "My Droplet",
+          region_id: 1,
+          size_id: 33,
+          backups_active: true,
+          backups: [],
+          snapshots: [],
+          ip_address: "1.2.3.4",
+          private_ip_address: "5.6.7.8",
+          locked: false,
+          status: "active"
+        }
+      )
+      send_command("do droplets show 123")
+      expect(replies.last).to eq <<-DROPLET.chomp
+ID: 123, Image ID: 456, Name: My Droplet, Region ID: 1, Size ID: 33, Backups active: true, \
+Backups: [], Snapshots: [], IP address: 1.2.3.4, Private IP address: 5.6.7.8, Locked: false, \
+Status: active
+DROPLET
+    end
+  end
+
   describe "#shutdown" do
     it "shuts down the droplet" do
       allow(client_droplets).to receive(:shutdown).with("123").and_return(do_ok)
