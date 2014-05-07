@@ -69,8 +69,7 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
         hash_including(ssh_key_ids: "1,2,3", private_networking: true, backups_enabled: true)
       ).and_return(status: "OK", droplet: { id: 123, name: "example.com" })
       send_command <<-COMMAND.chomp
-do droplets create example.com 1 2 3 ssh_key_ids=1,2,3 private_networking=true \
-backups_enabled=true
+do droplets create example.com 1 2 3 --ssh-key-ids 1,2,3 --private-networking --backups_enabled
 COMMAND
     end
   end

@@ -4,6 +4,10 @@ module Lita
       class Droplet < Base
         do_route /^do\s+droplets?\s+create(?:\s+[^\s]+){4}/i, :create, {
           t("help.droplets.create_key") => t("help.droplets.create_value")
+        }, {
+          backups_enabled: { boolean: true },
+          private_networking: { boolean: true },
+          ssh_key_ids: {}
         }
 
         do_route /^do\s+droplets?\s+delete\s+\d+/i, :delete, {
@@ -59,8 +63,9 @@ module Lita
         }
 
         def create(response)
-          name, size, image, region, *args = response.args[2..response.args.size]
-          kwargs = extract_named_args(args, :ssh_key_ids, :private_networking, :backups_enabled)
+          name, size, image, region = response.args[2..5]
+          kwargs = response.extensions[:kwargs].dup
+          kwargs.each { |k, v| kwargs.delete(k) if v.nil? }
 
           numeric = /^\d+$/
 

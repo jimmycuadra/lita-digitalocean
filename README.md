@@ -97,7 +97,7 @@ Lita: do domain records show DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
 To create a droplet:
 
 ```
-Lita: do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_SLUG [ssh_key_ids=SSH_KEY_IDS] [private_networking=true|false] [backups_enabled=true|false]
+Lita: do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_SLUG [--ssh-key-ids SSH_KEY_IDS] [--private-networking] [--backups-enabled]
 ```
 
 To delete a droplet, optionally writing zeroes to the disk first:

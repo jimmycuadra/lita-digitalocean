@@ -68,8 +68,7 @@ en:
           droplets:
             create_key: >-
               do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_SLUG
-              [ssh_key_ids=SSH_KEY_IDS] [private_networking=true|false]
-              [backups_enabled=true|false]
+              [--ssh-key-ids SSH_KEY_IDS] [--private-networking] [--backups-enabled]
             create_value: >-
               Creates a droplet. The optional ssh_key_ids field is a comma-separated list of
               SSH key IDs.
