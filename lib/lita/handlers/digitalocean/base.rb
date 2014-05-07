@@ -53,34 +53,9 @@ module Lita
           do_response
         end
 
-        def extract_named_args(args, *keys)
-          args.inject({}) do |hash, arg|
-            key, value = arg.split("=", 2)
-
-            if value
-              normalized_key = key.downcase.to_sym
-
-              if keys.include?(normalized_key)
-                stripped_value = value.gsub(/\A["']|["']\Z/, "")
-                hash[normalized_key] = case stripped_value
-                when "true"
-                  true
-                when "false"
-                  false
-                else
-                  stripped_value
-                end
-              end
-            end
-
-            hash
-          end
-        end
-
         def format_array(array)
           %([#{array.join(",")}])
         end
-
       end
     end
   end

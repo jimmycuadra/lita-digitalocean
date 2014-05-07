@@ -235,7 +235,7 @@ Lita: do ssh keys delete ID
 To edit the name and/or public key of an existing SSH key:
 
 ```
-Lita: do ssh keys edit ID [name=NAME] [public_key=PUBLIC_KEY]
+Lita: do ssh keys edit ID [--name NAME] [--public-key PUBLIC_KEY]
 ```
 
 To list the names and IDs of all SSH keys:

@@ -5,7 +5,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
   it { routes_command("do ssh keys delete 123").to(:delete) }
   it do
     routes_command(
-      "do ssh keys edit 123 name=foo public_key='ssh-rsa changed'"
+      "do ssh keys edit 123 --name foo --public-key 'ssh-rsa changed'"
     ).to(:edit)
   end
   it { routes_command("do ssh keys list").to(:list) }
@@ -90,7 +90,7 @@ describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
         name: "My Key",
         ssh_pub_key: "ssh-rsa abcdefg"
       ).and_return(do_key)
-      send_command(%{do ssh keys edit 123 name='My Key' public_key="ssh-rsa abcdefg"})
+      send_command(%{do ssh keys edit 123 --name 'My Key' --public-key "ssh-rsa abcdefg"})
       expect(replies.last).to eq("Updated SSH key: 123 (My Key): ssh-rsa abcdefg")
     end
   end
