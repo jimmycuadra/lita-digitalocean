@@ -219,7 +219,7 @@ module Lita
         private
 
         def formatted_droplet(droplet)
-          Hashie::Rash.new droplet.merge(
+          Hashie::Mash.new droplet.merge(
             formatted_backups: format_array(droplet[:backups]),
             formatted_snapshots: format_array(droplet[:snapshots])
           )

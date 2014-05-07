@@ -1,5 +1,5 @@
 require "digital_ocean"
-require "rash"
+require "hashie"
 
 module Lita
   module Handlers

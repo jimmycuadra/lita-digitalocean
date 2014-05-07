@@ -14,8 +14,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "lita", ">= 3.1"
-  spec.add_runtime_dependency "digital_ocean", ">= 1.3.0"
+  spec.add_runtime_dependency "lita", ">= 3.2"
+  spec.add_runtime_dependency "lita-keyword-arguments"
+  spec.add_runtime_dependency "digital_ocean", ">= 1.5.0"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

@@ -55,7 +55,7 @@ module Lita
         private
 
         def formatted_image(image)
-          Hashie::Rash.new image.merge(
+          Hashie::Mash.new image.merge(
             formatted_regions: format_array(image[:regions]),
             formatted_region_slugs: format_array(image[:region_slugs])
           )
