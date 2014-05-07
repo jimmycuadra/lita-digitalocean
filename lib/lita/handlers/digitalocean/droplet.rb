@@ -8,7 +8,7 @@ module Lita
 
         do_route /^do\s+droplets?\s+delete\s+\d+/i, :delete, {
           t("help.droplets.delete_key") => t("help.droplets.delete_value")
-        }
+        }, { scrub: { boolean: true } }
 
         do_route /^do\s+droplets?\s+list$/i, :list, {
           t("help.droplets.list_key") => t("help.droplets.list_value")
@@ -83,10 +83,9 @@ module Lita
         end
 
         def delete(response)
-          kwargs = extract_named_args(response.args, :scrub)
           id = response.args[2]
           options = {}
-          options[:scrub_data] = true if kwargs[:scrub]
+          options[:scrub_data] = true if response.extensions[:kwargs][:scrub]
 
           do_response = do_call(response) do |client|
             client.droplets.delete(id, options)

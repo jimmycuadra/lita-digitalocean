@@ -1,4 +1,5 @@
 require "digital_ocean"
+require "lita-keyword-arguments"
 require "hashie"
 
 module Lita
@@ -12,8 +13,16 @@ module Lita
 
         private
 
-        def self.do_route(regexp, route_name, help)
-          route(regexp, route_name, command: true, restrict_to: :digitalocean_admins, help: help)
+        def self.do_route(regexp, route_name, help, kwargs = nil)
+          options = {
+            command: true,
+            help: help,
+            restrict_to: :digitalocean_admins
+          }
+
+          options[:kwargs] = kwargs if kwargs
+
+          route(regexp, route_name, options)
         end
 
         def api_key

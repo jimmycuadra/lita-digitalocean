@@ -103,7 +103,7 @@ Lita: do droplets create HOSTNAME SIZE_ID_OR_SLUG IMAGE_ID_OR_SLUG REGION_ID_OR_
 To delete a droplet, optionally writing zeroes to the disk first:
 
 ```
-Lita: do droplets delete ID [scrub=true|false]
+Lita: do droplets delete ID [--scrub]
 ```
 
 To list all droplets:

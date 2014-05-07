@@ -7,7 +7,7 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
     ).to(:create)
   end
   it { routes_command("do droplets delete 123").to(:delete) }
-  it { routes_command("do droplets delete 123 scrub=true").to(:delete) }
+  it { routes_command("do droplets delete 123 --scrub").to(:delete) }
   it { routes_command("do droplets list").to(:list) }
   it { routes_command("do droplets password reset 123").to(:password_reset) }
   it { routes_command("do droplets power cycle 123").to(:power_cycle) }
@@ -87,7 +87,7 @@ COMMAND
         "123", {
           scrub_data: true
         }).and_return(do_ok)
-      send_command("do droplets delete 123 scrub=true")
+      send_command("do droplets delete 123 --scrub")
     end
   end
 

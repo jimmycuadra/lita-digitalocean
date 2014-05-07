@@ -73,7 +73,7 @@ en:
             create_value: >-
               Creates a droplet. The optional ssh_key_ids field is a comma-separated list of
               SSH key IDs.
-            delete_key: do droplets delete ID [scrub=true|false]
+            delete_key: do droplets delete ID [--scrub]
             delete_value: Deletes a droplet, optionally writing zeroes to the disk first.
             list_key: do droplets list
             list_value: Lists all droplets.
