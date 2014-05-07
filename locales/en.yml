@@ -52,14 +52,14 @@ en:
             show_value: Shows the DNS record set details for domain DOMAIN_NAME_OR_ID.
           domain_records:
             create_key: >-
-              do domain records create DOMAIN_NAME_OR_ID TYPE DATA [name=NAME]
-              [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+              do domain records create DOMAIN_NAME_OR_ID TYPE DATA [--name NAME]
+              [--priority PRIORITY] [--port PORT] [--weight WEIGHT]
             create_value: Creates a new DNS record for domain DOMAIN_NAME_OR_ID.
             delete_key: do domain records delete DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
             delete_value: Deletes the DNS record DOMAIN_RECORD_ID for domain DOMAIN_NAME_OR_ID.
             edit_key: >-
-              do domain records edit DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID TYPE DATA [name=NAME]
-              [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+              do domain records edit DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID TYPE DATA [--name NAME]
+              [--priority PRIORITY] [--port PORT] [--weight WEIGHT]
             edit_value: Edits DNS record DOMAIN_RECORD_ID for domain DOMAIN_NAME_OR_ID.
             list_key: do domain records list DOMAIN_NAME_OR_ID
             list_value: Lists all DNS records for domain DOMAIN_NAME_OR_ID.

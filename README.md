@@ -65,7 +65,7 @@ Lita: do domains show DOMAIN_NAME_OR_ID
 To create a new DNS record:
 
 ```
-Lita: do domain records create DOMAIN_NAME_OR_ID TYPE DATA [name=NAME] [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+Lita: do domain records create DOMAIN_NAME_OR_ID TYPE DATA [--name NAME] [--priority PRIORITY] [--port PORT] [--weight WEIGHT]
 ```
 
 To delete a DNS record:
@@ -77,7 +77,7 @@ Lita: do domain records delete DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID
 To edit a DNS record:
 
 ```
-Lita: do domain records edit DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID TYPE DATA [name=NAME] [priority=PRIORITY] [port=PORT] [weight=WEIGHT]
+Lita: do domain records edit DOMAIN_NAME_OR_ID DOMAIN_RECORD_ID TYPE DATA [--name NAME] [--priority PRIORITY] [--port PORT] [--weight WEIGHT]
 ```
 
 To list all DNS records for a DNS record set:
