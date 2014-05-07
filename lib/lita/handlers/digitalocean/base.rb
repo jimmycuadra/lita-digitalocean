@@ -37,10 +37,6 @@ module Lita
           config.client_id
         end
 
-        def config
-          Lita.config.handlers.digitalocean
-        end
-
         def do_call(response)
           unless api_key && client_id
             response.reply(t("credentials_missing"))
