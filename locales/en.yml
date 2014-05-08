@@ -23,6 +23,8 @@ en:
             deleted: "Deleted DNS record."
           edit:
             updated: "Updated DNS record."
+          list:
+            detail: "ID: %{id}, Record Type: %{record_type}, Data: %{data}"
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"

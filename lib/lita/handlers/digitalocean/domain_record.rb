@@ -71,6 +71,16 @@ module Lita
 
           response.reply(t("domain_records.edit.updated"))
         end
+
+        def list(response)
+          do_response = do_call(response) do |client|
+            client.domains.list_records(response.args[3])
+          end or return
+
+          messages = do_response[:records].map { |record| t("domain_records.list.detail", record) }
+
+          response.reply(*messages)
+        end
       end
 
       Lita.register_handler(DomainRecord)

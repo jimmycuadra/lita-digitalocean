@@ -72,4 +72,26 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
       expect(replies.last).to eq("Updated DNS record.")
     end
   end
+
+  describe "#list" do
+    it "responds with a list of all domain records for the given record set" do
+      allow(client_domains).to receive(:list_records).with("example.com").and_return(
+        status: "OK",
+        records: [{
+          id: 123,
+          record_type: "A",
+          data: "10.0.0.0"
+        }, {
+          id: 456,
+          record_type: "CNAME",
+          data: "@"
+        }]
+      )
+      send_command("do domain records list example.com")
+      expect(replies).to eq([
+        "ID: 123, Record Type: A, Data: 10.0.0.0",
+        "ID: 456, Record Type: CNAME, Data: @"
+      ])
+    end
+  end
 end
