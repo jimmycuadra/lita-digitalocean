@@ -3,7 +3,7 @@ require "spec_helper"
 describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
   it do
     routes_command(
-      "do domain records create example.com txt 'some value' name=example.com"
+      "do domain records create example.com txt 'some value' --name example.com"
     ).to(:create)
   end
   it { routes_command("do domain records delete example.com 123").to(:delete) }
@@ -31,5 +31,21 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
     ).and_return(true)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
+  end
+
+  describe "#create" do
+    it "creates a new domain record" do
+      allow(client_domains).to receive(:create_record).with(
+        "example.com",
+        data: "@",
+        name: "foo",
+        port: "456",
+        priority: "123",
+        record_type: "srv",
+        weight: "789"
+      ).and_return(status: "OK", domain_record: { id: 123 })
+      send_command("do domain records create example.com srv @ --name foo --priority 123 --port 456 --weight 789")
+      expect(replies.last).to eq("Created new DNS record: 123")
+    end
   end
 end
