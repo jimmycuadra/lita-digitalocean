@@ -94,4 +94,25 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
       ])
     end
   end
+
+  describe "#show" do
+    it "responds with the details of the domain record" do
+      allow(client_domains).to receive(:show_record).with("example.com", "123").and_return(
+        status: "OK",
+        record: {
+          id: 123,
+          record_type: "A",
+          data: "10.0.0.0",
+          name: "example.com",
+          priority: 123,
+          port: 456,
+          weight: 789
+        }
+      )
+      send_command("do domain records show example.com 123")
+      expect(replies.last).to eq(
+"ID: 123, Record Type: A, Data: 10.0.0.0, Name: example.com, Priority: 123, Port: 456, Weight: 789"
+      )
+    end
+  end
 end

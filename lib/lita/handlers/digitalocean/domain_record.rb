@@ -81,6 +81,16 @@ module Lita
 
           response.reply(*messages)
         end
+
+        def show(response)
+          id, record_id = response.args[3..4]
+
+          do_response = do_call(response) do |client|
+            client.domains.show_record(id, record_id)
+          end or return
+
+          response.reply(t("domain_records.show.details", do_response[:record]))
+        end
       end
 
       Lita.register_handler(DomainRecord)

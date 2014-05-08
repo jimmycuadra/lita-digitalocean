@@ -25,6 +25,10 @@ en:
             updated: "Updated DNS record."
           list:
             detail: "ID: %{id}, Record Type: %{record_type}, Data: %{data}"
+          show:
+            details: >-
+              ID: %{id}, Record Type: %{record_type}, Data: %{data}, Name: %{name},
+              Priority: %{priority}, Port: %{port}, Weight: %{weight}
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"
