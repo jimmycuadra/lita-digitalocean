@@ -62,4 +62,24 @@ describe Lita::Handlers::Digitalocean::Domain, lita_handler: true do
       ])
     end
   end
+
+  describe "#show" do
+    it "responds with the details of the DNS record set" do
+      allow(client_domains).to receive(:show).with("123").and_return(
+        status: "OK",
+        domain: {
+          id: 123,
+          name: "example.com",
+          ttl: 1800,
+          live_zone_file: "LZF",
+          error: nil,
+          zone_file_with_error: nil
+        }
+      )
+      send_command("do domains show 123")
+      expect(replies.last).to eq(
+      "ID: 123, Name: example.com, TTL: 1800, Live Zone File: LZF, Error: , Zone File With Error: "
+      )
+    end
+  end
 end

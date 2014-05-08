@@ -45,6 +45,14 @@ module Lita
 
           response.reply(*messages)
         end
+
+        def show(response)
+          do_response = do_call(response) do |client|
+            client.domains.show(response.args[2])
+          end or return
+
+          response.reply(t("domains.show.details", do_response[:domain]))
+        end
       end
 
       Lita.register_handler(Domain)

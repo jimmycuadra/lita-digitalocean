@@ -12,6 +12,10 @@ en:
             deleted: "Deleted DNS record set."
           list:
             detail: "ID: %{id}, Name: %{name}"
+          show:
+            details: >-
+              ID: %{id}, Name: %{name}, TTL: %{ttl}, Live Zone File: %{live_zone_file},
+              Error: %{error}, Zone File With Error: %{zone_file_with_error}
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"
