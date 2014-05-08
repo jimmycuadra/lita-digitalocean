@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-digitalocean"
-  spec.version       = "0.0.1"
+  spec.version       = "1.0.0"
   spec.authors       = ["Jimmy Cuadra"]
   spec.email         = ["jimmy@jimmycuadra.com"]
   spec.description   = %q{A Lita handler for managing DigitalOcean services.}
