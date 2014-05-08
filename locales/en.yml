@@ -21,6 +21,8 @@ en:
             created: "Created new DNS record: %{id}"
           delete:
             deleted: "Deleted DNS record."
+          edit:
+            updated: "Updated DNS record."
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"

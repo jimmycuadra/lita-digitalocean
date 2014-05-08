@@ -17,6 +17,11 @@ module Lita
 
         do_route /^do\s+domain\s+records?\s+edit\s+(?:[^\s]+\s+){3}[^\s]+/i, :edit, {
           t("help.domain_records.edit_key") => t("help.domain_records.edit_value")
+        }, {
+          name: {},
+          priority: {},
+          port: {},
+          weight: {}
         }
 
         do_route /^do\s+domain\s+records?\s+list\s+[^\s]+$/i, :list, {
@@ -50,6 +55,21 @@ module Lita
           end or return
 
           response.reply(t("domain_records.delete.deleted"))
+        end
+
+        def edit(response)
+          id, record_id, type, data = response.args[3..6]
+
+          params = {
+            data: data,
+            record_type: type
+          }.merge(response.extensions[:kwargs].reject { |_key, value| value.nil? })
+
+          do_response = do_call(response) do |client|
+            client.domains.edit_record(id, record_id, params)
+          end or return
+
+          response.reply(t("domain_records.edit.updated"))
         end
       end
 

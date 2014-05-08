@@ -56,4 +56,20 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
       expect(replies.last).to eq("Deleted DNS record.")
     end
   end
+
+  describe "#edit" do
+    it "edits a domain record" do
+      allow(client_domains).to receive(:edit_record).with(
+        "example.com",
+        "123",
+        data: "example.com",
+        record_type: "cname",
+        name: "www.example.com"
+      ).and_return(status: "OK")
+      send_command(
+        "do domain records edit example.com 123 cname example.com --name www.example.com"
+      )
+      expect(replies.last).to eq("Updated DNS record.")
+    end
+  end
 end
