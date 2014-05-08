@@ -35,6 +35,16 @@ module Lita
 
           response.reply(t("domains.delete.deleted"))
         end
+
+        def list(response)
+          do_response = do_call(response) do |client|
+            client.domains.list
+          end or return
+
+          messages = do_response[:domains].map { |domain| t("domains.list.detail", domain) }
+
+          response.reply(*messages)
+        end
       end
 
       Lita.register_handler(Domain)

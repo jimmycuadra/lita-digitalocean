@@ -10,6 +10,8 @@ en:
             created: "Created new DNS record set for %{name}."
           delete:
             deleted: "Deleted DNS record set."
+          list:
+            detail: "ID: %{id}, Name: %{name}"
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"

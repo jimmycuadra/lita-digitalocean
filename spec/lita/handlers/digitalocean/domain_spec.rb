@@ -42,4 +42,24 @@ describe Lita::Handlers::Digitalocean::Domain, lita_handler: true do
       expect(replies.last).to eq("Deleted DNS record set.")
     end
   end
+
+  describe "#list" do
+    it "lists all DNS record sets" do
+      allow(client_domains).to receive(:list).and_return(
+        status: "OK",
+        domains: [{
+          id: 123,
+          name: "example.com"
+        }, {
+          id: 456,
+          name: "another.example.com"
+        }]
+      )
+      send_command("do domains list")
+      expect(replies).to eq([
+        "ID: 123, Name: example.com",
+        "ID: 456, Name: another.example.com"
+      ])
+    end
+  end
 end
