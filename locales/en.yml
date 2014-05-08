@@ -19,6 +19,8 @@ en:
         domain_records:
           create:
             created: "Created new DNS record: %{id}"
+          delete:
+            deleted: "Deleted DNS record."
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"

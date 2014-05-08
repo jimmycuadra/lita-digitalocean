@@ -41,6 +41,16 @@ module Lita
 
           response.reply(t("domain_records.create.created", do_response[:domain_record]))
         end
+
+        def delete(response)
+          id, record_id = response.args[3..4]
+
+          do_response = do_call(response) do |client|
+            client.domains.delete_record(id, record_id)
+          end or return
+
+          response.reply(t("domain_records.delete.deleted"))
+        end
       end
 
       Lita.register_handler(DomainRecord)

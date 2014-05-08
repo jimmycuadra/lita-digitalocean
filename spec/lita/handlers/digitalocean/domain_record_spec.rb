@@ -48,4 +48,12 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
       expect(replies.last).to eq("Created new DNS record: 123")
     end
   end
+
+  describe "#delete" do
+    it "deletes a domain record" do
+      allow(client_domains).to receive(:delete_record).with("123", "456").and_return(status: "OK")
+      send_command("do domain records delete 123 456")
+      expect(replies.last).to eq("Deleted DNS record.")
+    end
+  end
 end
