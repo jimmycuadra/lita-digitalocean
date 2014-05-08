@@ -23,4 +23,15 @@ describe Lita::Handlers::Digitalocean::Domain, lita_handler: true do
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end
+
+  describe "#create" do
+    it "creates a new DNS record set" do
+      allow(client_domains).to receive(:create).with(
+        name: "example.com",
+        ip_address: "10.0.0.0"
+      ).and_return(status: "OK", domain: { id: 123, name: "example.com" })
+      send_command("do domains create example.com 10.0.0.0")
+      expect(replies.last).to eq("Created new DNS record set for example.com.")
+    end
+  end
 end

@@ -5,6 +5,9 @@ en:
         credentials_missing: >-
           client_id and api_key must be set in Lita's configuration to
           use the DigitalOcean commands.
+        domains:
+          create:
+            created: "Created new DNS record set for %{name}."
         droplets:
           create:
             created: "Created new droplet: %{id} (%{name})"
