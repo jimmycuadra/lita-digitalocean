@@ -43,7 +43,7 @@ describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
         priority: "123",
         record_type: "srv",
         weight: "789"
-      ).and_return(status: "OK", domain_record: { id: 123 })
+      ).and_return(status: "OK", record: { id: 123 })
       send_command("do domain records create example.com srv @ --name foo --priority 123 --port 456 --weight 789")
       expect(replies.last).to eq("Created new DNS record: 123")
     end

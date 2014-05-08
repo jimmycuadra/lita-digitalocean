@@ -44,7 +44,7 @@ module Lita
             client.domains.create_record(id, params)
           end or return
 
-          response.reply(t("domain_records.create.created", do_response[:domain_record]))
+          response.reply(t("domain_records.create.created", do_response[:record]))
         end
 
         def delete(response)
