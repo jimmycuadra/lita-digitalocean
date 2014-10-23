@@ -2,6 +2,8 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Region < Base
+        namespace "digitalocean"
+
         do_route /^do\s+regions?\s+list$/i, :list, {
           t("help.regions.list_key") => t("help.regions.list_value")
         }

@@ -2,6 +2,8 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class SSHKey < Base
+        namespace "digitalocean"
+
         do_route /^do\s+ssh\s+keys?\s+add\s+.+$/i, :add, {
           t("help.ssh_keys.add_key") => t("help.ssh_keys.add_value")
         }

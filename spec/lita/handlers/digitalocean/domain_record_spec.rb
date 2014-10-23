@@ -2,33 +2,29 @@ require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::DomainRecord, lita_handler: true do
   it do
-    routes_command(
+    is_expected.to route_command(
       "do domain records create example.com txt 'some value' --name example.com"
     ).to(:create)
   end
-  it { routes_command("do domain records delete example.com 123").to(:delete) }
+  it { is_expected.to route_command("do domain records delete example.com 123").to(:delete) }
   it do
-    routes_command(
+    is_expected.to route_command(
       "do domain records edit example.com 123 txt 'some value' name=example.com"
     ).to(:edit)
   end
-  it { routes_command("do domain records list example.com").to(:list) }
-  it { routes_command("do domain records show example.com 123").to(:show) }
+  it { is_expected.to route_command("do domain records list example.com").to(:list) }
+  it { is_expected.to route_command("do domain records show example.com 123").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", domains: client_domains) }
   let(:client_domains) { instance_double("::DigitalOcean::Resource::Domain") }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

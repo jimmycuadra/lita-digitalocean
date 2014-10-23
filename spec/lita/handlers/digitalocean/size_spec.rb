@@ -1,22 +1,18 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Size, lita_handler: true do
-  it { routes_command("do sizes list").to(:list) }
+  it { is_expected.to route_command("do sizes list").to(:list) }
 
   let(:client) { instance_double( "::DigitalOcean::API", sizes: client_sizes) }
   let(:client_sizes) { instance_double("::DigitalOcean::Resource::Size") }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

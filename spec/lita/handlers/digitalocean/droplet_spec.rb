@@ -2,24 +2,24 @@ require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
   it do
-    routes_command(
+    is_expected.to route_command(
       "do droplets create example.com 512mb centos-5-8-x64 nyc1"
     ).to(:create)
   end
-  it { routes_command("do droplets delete 123").to(:delete) }
-  it { routes_command("do droplets delete 123 --scrub").to(:delete) }
-  it { routes_command("do droplets list").to(:list) }
-  it { routes_command("do droplets password reset 123").to(:password_reset) }
-  it { routes_command("do droplets power cycle 123").to(:power_cycle) }
-  it { routes_command("do droplets power off 123").to(:power_off) }
-  it { routes_command("do droplets power on 123").to(:power_on) }
-  it { routes_command("do droplets reboot 123").to(:reboot) }
-  it { routes_command("do droplets rebuild 123 456").to(:rebuild) }
-  it { routes_command("do droplets resize 123 1gb").to(:resize) }
-  it { routes_command("do droplets restore 123 456").to(:restore) }
-  it { routes_command("do droplets show 123").to(:show) }
-  it { routes_command("do droplets shutdown 123").to(:shutdown) }
-  it { routes_command("do droplets snapshot 123 'My Snapshot'").to(:snapshot) }
+  it { is_expected.to route_command("do droplets delete 123").to(:delete) }
+  it { is_expected.to route_command("do droplets delete 123 --scrub").to(:delete) }
+  it { is_expected.to route_command("do droplets list").to(:list) }
+  it { is_expected.to route_command("do droplets password reset 123").to(:password_reset) }
+  it { is_expected.to route_command("do droplets power cycle 123").to(:power_cycle) }
+  it { is_expected.to route_command("do droplets power off 123").to(:power_off) }
+  it { is_expected.to route_command("do droplets power on 123").to(:power_on) }
+  it { is_expected.to route_command("do droplets reboot 123").to(:reboot) }
+  it { is_expected.to route_command("do droplets rebuild 123 456").to(:rebuild) }
+  it { is_expected.to route_command("do droplets resize 123 1gb").to(:resize) }
+  it { is_expected.to route_command("do droplets restore 123 456").to(:restore) }
+  it { is_expected.to route_command("do droplets show 123").to(:show) }
+  it { is_expected.to route_command("do droplets shutdown 123").to(:shutdown) }
+  it { is_expected.to route_command("do droplets snapshot 123 'My Snapshot'").to(:snapshot) }
 
   let(:client) { instance_double("::DigitalOcean::API", droplets: client_droplets) }
   let(:client_droplets) { instance_double("::DigitalOcean::Resource::Droplet") }
@@ -27,16 +27,12 @@ describe Lita::Handlers::Digitalocean::Droplet, lita_handler: true do
   let(:do_ok) { { status: "OK" } }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

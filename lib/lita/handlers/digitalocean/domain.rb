@@ -2,6 +2,8 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Domain < Base
+        namespace "digitalocean"
+
         do_route /^do\s+domains?\s+create\s+[^\s]+\s+[^\s]+$/i, :create, {
           t("help.domains.create_key") => t("help.domains.create_value")
         }

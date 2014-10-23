@@ -1,25 +1,21 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Image, lita_handler: true do
-  it { routes_command("do images delete 123").to(:delete) }
-  it { routes_command("do images list").to(:list) }
-  it { routes_command("do images list filter").to(:list) }
-  it { routes_command("do images show 123").to(:show) }
+  it { is_expected.to route_command("do images delete 123").to(:delete) }
+  it { is_expected.to route_command("do images list").to(:list) }
+  it { is_expected.to route_command("do images list filter").to(:list) }
+  it { is_expected.to route_command("do images show 123").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", images: client_images) }
   let(:client_images) { instance_double("::DigitalOcean::Resource::Image") }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

@@ -2,6 +2,8 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Size < Base
+        namespace "digitalocean"
+
         do_route /^do\s+sizes\s+list$/, :list, {
           t("help.sizes.list_key") => t("help.sizes.list_value")
         }

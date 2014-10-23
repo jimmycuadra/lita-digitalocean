@@ -2,6 +2,8 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Image < Base
+        namespace "digitalocean"
+
         do_route /^do\s+images?\s+delete\s+([^\s]+)$/i, :delete, {
           t("help.images.delete_key") => t("help.images.delete_value")
         }

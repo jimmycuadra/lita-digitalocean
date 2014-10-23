@@ -1,22 +1,18 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Region, lita_handler: true do
-  it { routes_command("do regions list").to(:list) }
+  it { is_expected.to route_command("do regions list").to(:list) }
 
   let(:client) { instance_double("::DigitalOcean::API", regions: client_regions) }
   let(:client_regions) { instance_double("::DigitalOcean::Resource::Region") }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

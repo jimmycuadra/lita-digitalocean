@@ -1,30 +1,26 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::SSHKey, lita_handler: true do
-  it { routes_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:add) }
-  it { routes_command("do ssh keys delete 123").to(:delete) }
+  it { is_expected.to route_command("do ssh keys add 'foo bar' 'ssh-rsa abcdefg'").to(:add) }
+  it { is_expected.to route_command("do ssh keys delete 123").to(:delete) }
   it do
-    routes_command(
+    is_expected.to route_command(
       "do ssh keys edit 123 --name foo --public-key 'ssh-rsa changed'"
     ).to(:edit)
   end
-  it { routes_command("do ssh keys list").to(:list) }
-  it { routes_command("do ssh keys show 123").to(:show) }
+  it { is_expected.to route_command("do ssh keys list").to(:list) }
+  it { is_expected.to route_command("do ssh keys show 123").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", ssh_keys: client_ssh_keys) }
   let(:client_ssh_keys) { instance_double("::DigitalOcean::Resource::SSHKey") }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

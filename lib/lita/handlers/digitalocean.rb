@@ -1,10 +1,8 @@
 module Lita
   module Handlers
     class Digitalocean < Handler
-      def self.default_config(config)
-        config.client_id = nil
-        config.api_key = nil
-      end
+      config :client_id, type: String, required: true
+      config :api_key, type: String, required: true
     end
 
     Lita.register_handler(Digitalocean)

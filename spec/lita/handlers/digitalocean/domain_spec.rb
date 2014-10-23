@@ -1,25 +1,21 @@
 require "spec_helper"
 
 describe Lita::Handlers::Digitalocean::Domain, lita_handler: true do
-  it { routes_command("do domains create example.com 10.10.10.10").to(:create) }
-  it { routes_command("do domains delete example.com").to(:delete) }
-  it { routes_command("do domains list").to(:list) }
-  it { routes_command("do domains show example.com").to(:show) }
+  it { is_expected.to route_command("do domains create example.com 10.10.10.10").to(:create) }
+  it { is_expected.to route_command("do domains delete example.com").to(:delete) }
+  it { is_expected.to route_command("do domains list").to(:list) }
+  it { is_expected.to route_command("do domains show example.com").to(:show) }
 
   let(:client) { instance_double("::DigitalOcean::API", domains: client_domains) }
   let(:client_domains) { instance_double("::DigitalOcean::Resource::Domain") }
 
   before do
-    Lita.config.handlers.digitalocean = Lita::Config.new
-    Lita.config.handlers.digitalocean.tap do |config|
+    registry.config.handlers.digitalocean.tap do |config|
       config.client_id = "CLIENT_ID"
       config.api_key = "API_KEY"
     end
 
-    allow(Lita::Authorization).to receive(:user_in_group?).with(
-      user,
-      :digitalocean_admins
-    ).and_return(true)
+    robot.auth.add_user_to_group!(user, :digitalocean_admins)
 
     allow(::DigitalOcean::API).to receive(:new).and_return(client)
   end

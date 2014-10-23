@@ -6,10 +6,7 @@ module Lita
   module Handlers
     class Digitalocean < Handler
       class Base < Handler
-        # Override key for locale namespace.
-        def self.name
-          "Digitalocean"
-        end
+        namespace "digitalocean"
 
         private
 
